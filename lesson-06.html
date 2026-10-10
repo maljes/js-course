@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Funktionen · Code-Heft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/course.css">
+</head>
+<body>
+<main>
+  <p class="lesson-number">Lektion 6</p>
+  <h1>Funktionen</h1>
+  <p class="lead">Eine Funktion ist ein eigener Befehl, den du einmal baust und dann so oft benutzt, wie du willst. Du kennst schon welche: <code>console.log</code>, <code>prompt</code> und <code>Number</code> sind Funktionen.</p>
+
+  <h2>Eine Funktion bauen</h2>
+  <pre><code>function greet() {
+  console.log("Hallo!");
+  console.log("Schön, dass du da bist.");
+}
+
+greet();   // ruft die Funktion auf
+greet();   // und gleich nochmal</code></pre>
+  <p>Mit <code>function</code> legst du fest, <em>was</em> die Funktion tut. Dabei passiert noch nichts! Erst der <mark>Aufruf</mark> mit Namen und runden Klammern, also <code>greet()</code>, führt den Code aus.</p>
+
+  <h2>Parameter: Werte mitgeben</h2>
+  <p>Richtig nützlich werden Funktionen, wenn man ihnen etwas mitgeben kann. In den runden Klammern stehen <mark>Parameter</mark>, das sind Variablen, die beim Aufruf einen Wert bekommen:</p>
+  <js-editor name="lesson-06-params">
+    <textarea>
+function greet(name) {
+  console.log(`Hallo ${name}, schön, dass du da bist!`);
+}
+
+greet("Mia");
+greet("Leon");
+
+function introduce(name, hobby) {
+  console.log(`${name} mag ${hobby}.`);
+}
+
+introduce("Ayşe", "Skaten");
+</textarea>
+  </js-editor>
+
+  <h2>return: ein Ergebnis zurückgeben</h2>
+  <p>Viele Funktionen berechnen etwas und geben das Ergebnis mit <code>return</code> zurück. Den Rückgabewert kannst du dann in einer Variable speichern oder weiterverwenden:</p>
+  <js-editor name="lesson-06-return">
+    <textarea>
+function square(number) {
+  return number * number;
+}
+
+const result = square(5);
+console.log(result);              // 25
+console.log(square(3) + square(4)); // 9 + 16 = 25
+</textarea>
+  </js-editor>
+
+  <p class="note warning">Der Unterschied ist wichtig: console.log zeigt etwas an, return gibt etwas zurück. Mit einem angezeigten Wert kann dein Programm nicht weiterrechnen, mit einem zurückgegebenen schon.</p>
+  <p>Nach <code>return</code> ist die Funktion sofort beendet. Code dahinter wird nicht mehr ausgeführt.</p>
+
+  <h2>Kurzschreibweise: Pfeilfunktionen</h2>
+  <p>In modernem JavaScript siehst du oft diese kürzere Schreibweise. Sie macht genau das Gleiche:</p>
+  <pre><code>const square = (number) =&gt; number * number;</code></pre>
+  <p>Du musst sie noch nicht selbst benutzen, aber erkennen solltest du sie.</p>
+
+  <h2>In der Konsole testen</h2>
+  <p>Funktionen kann man prima in der Konsole ausprobieren. Gib die erste Zeile ein und ruf die Funktion dann mit verschiedenen Werten auf:</p>
+  <js-console>
+    <code>function triple(x) { return x * 3; }</code>
+    <code>triple(4)</code>
+    <code>triple(triple(2))</code>
+    <code>triple("ha")</code>
+  </js-console>
+
+  <section class="exercise">
+    <h3>Übung: Verdoppeln</h3>
+    <p>Schreib eine Funktion <code>double(number)</code>, die die Zahl verdoppelt und mit <code>return</code> zurückgibt.</p>
+    <js-editor check="lesson-06-double">
+      <textarea>
+function double(number) {
+
+}
+
+console.log(double(4)); // soll 8 ergeben
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>function double(number) {
+  return number * 2;
+}</code></pre>
+    </details>
+  </section>
+
+  <section class="exercise">
+    <h3>Übung: Celsius in Fahrenheit</h3>
+    <p>In den USA misst man Temperatur in Fahrenheit. Die Formel lautet: Celsius mal 9, geteilt durch 5, plus 32. Schreib <code>toFahrenheit(celsius)</code>.</p>
+    <js-editor check="lesson-06-fahrenheit">
+      <textarea>
+function toFahrenheit(celsius) {
+
+}
+
+console.log(toFahrenheit(100)); // soll 212 ergeben
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>function toFahrenheit(celsius) {
+  return celsius * 9 / 5 + 32;
+}</code></pre>
+    </details>
+  </section>
+
+  <section class="exercise">
+    <h3>Übung: Ist die Zahl gerade?</h3>
+    <p>Schreib <code>isEven(number)</code>, die <code>true</code> zurückgibt, wenn die Zahl gerade ist, sonst <code>false</code>. Profi-Tipp: Ein Vergleich ergibt schon true oder false. Du brauchst nicht unbedingt ein <code>if</code>.</p>
+    <js-editor check="lesson-06-even">
+      <textarea>
+function isEven(number) {
+
+}
+
+console.log(isEven(4), isEven(7));
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>function isEven(number) {
+  return number % 2 === 0;
+}</code></pre>
+    </details>
+  </section>
+</main>
+<script src="assets/course.js"></script>
+<script>
+  // Checks a learner function against [argument, expected] pairs.
+  function checkFunction(fn, name, cases) {
+    if (typeof fn !== 'function') return `Ich finde keine Funktion namens ${name}. Stimmt der Name genau?`;
+    for (const [input, expected] of cases) {
+      const actual = fn(input);
+      if (actual === undefined) return `${name}(${input}) gibt nichts zurück. Hast du return vergessen?`;
+      if (actual !== expected) return `${name}(${input}) ergibt ${JSON.stringify(actual)}, sollte aber ${JSON.stringify(expected)} sein.`;
+    }
+    return true;
+  }
+
+  Course.check('lesson-06-double', ({ value }) =>
+    checkFunction(value('double'), 'double', [[4, 8], [0, 0], [-3, -6], [2.5, 5]]));
+
+  Course.check('lesson-06-fahrenheit', ({ value }) =>
+    checkFunction(value('toFahrenheit'), 'toFahrenheit', [[100, 212], [0, 32], [-40, -40], [20, 68]]));
+
+  Course.check('lesson-06-even', ({ value }) =>
+    checkFunction(value('isEven'), 'isEven', [[4, true], [7, false], [0, true], [13, false], [100, true]]));
+</script>
+</body>
+</html>

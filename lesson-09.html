@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTML-Grundlagen · Code-Heft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/course.css">
+</head>
+<body>
+<main>
+  <p class="lesson-number">Lektion 9</p>
+  <h1>HTML-Grundlagen</h1>
+  <p class="lead">Jede Webseite, die du je gesehen hast, besteht aus HTML. Es ist keine Programmiersprache, sondern eine Beschreibung: Hier ist eine Überschrift, da ein Bild, dort ein Button.</p>
+
+  <h2>Drei Sprachen, drei Aufgaben</h2>
+  <p>Eine Webseite ist wie ein Haus:</p>
+  <ul>
+    <li><strong>HTML</strong> ist das Gerüst: Wände, Türen, Fenster. Was gibt es auf der Seite?</li>
+    <li><strong>CSS</strong> ist die Einrichtung: Farben, Schriften, Abstände. Wie sieht es aus?</li>
+    <li><strong>JavaScript</strong> ist die Elektrik: Licht an, Klingel, Rollläden. Was passiert, wenn man etwas tut?</li>
+  </ul>
+
+  <h2>Tags</h2>
+  <p>HTML besteht aus <mark>Tags</mark> in spitzen Klammern. Die meisten kommen paarweise: ein öffnendes und ein schließendes Tag mit Schrägstrich. Was dazwischen steht, ist der Inhalt.</p>
+  <pre><code>&lt;h1&gt;Das ist eine Überschrift&lt;/h1&gt;
+&lt;p&gt;Das ist ein Absatz.&lt;/p&gt;</code></pre>
+  <p>Öffnendes Tag, Inhalt und schließendes Tag zusammen nennt man ein <mark>Element</mark>.</p>
+
+  <p>Unten siehst du eine <mark>Spielwiese</mark>, ähnlich wie CodePen, ein Werkzeug, das auch Profis benutzen. Es gibt drei Felder: HTML, CSS und JS. Ändere im HTML-Feld etwas, die Vorschau darunter aktualisiert sich automatisch.</p>
+  <html-playground name="lesson-09-first" height="220" editor-height="200">
+    <textarea data-lang="html">
+<h1>Hallo Welt!</h1>
+<p>Das ist meine erste Webseite.</p>
+<p>Hier kommt ein <strong>fetter</strong> und ein <em>schräger</em> Text.</p>
+</textarea>
+  </html-playground>
+
+  <h2>Die wichtigsten Tags</h2>
+  <table>
+    <tr><th>Tag</th><th>Wofür?</th></tr>
+    <tr><td><code>&lt;h1&gt;</code> bis <code>&lt;h6&gt;</code></td><td>Überschriften, h1 ist die größte</td></tr>
+    <tr><td><code>&lt;p&gt;</code></td><td>Absatz (paragraph)</td></tr>
+    <tr><td><code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code></td><td>wichtig (fett), betont (kursiv)</td></tr>
+    <tr><td><code>&lt;a href="…"&gt;</code></td><td>Link</td></tr>
+    <tr><td><code>&lt;img src="…" alt="…"&gt;</code></td><td>Bild, ohne schließendes Tag</td></tr>
+    <tr><td><code>&lt;ul&gt;</code> mit <code>&lt;li&gt;</code></td><td>Liste mit Punkten (list item)</td></tr>
+    <tr><td><code>&lt;ol&gt;</code> mit <code>&lt;li&gt;</code></td><td>nummerierte Liste</td></tr>
+    <tr><td><code>&lt;button&gt;</code></td><td>Knopf zum Klicken</td></tr>
+    <tr><td><code>&lt;input&gt;</code></td><td>Eingabefeld, ohne schließendes Tag</td></tr>
+    <tr><td><code>&lt;div&gt;</code></td><td>neutraler Kasten zum Gruppieren</td></tr>
+  </table>
+
+  <h2>Attribute</h2>
+  <p>Manche Tags brauchen Zusatzinfos. Die stehen als <mark>Attribute</mark> im öffnenden Tag, immer als <code>name="wert"</code>:</p>
+  <pre><code>&lt;a href="https://de.wikipedia.org"&gt;Zur Wikipedia&lt;/a&gt;
+&lt;img src="katze.jpg" alt="Eine schlafende Katze"&gt;</code></pre>
+  <p>Das <code>alt</code>-Attribut beschreibt das Bild für Menschen, die es nicht sehen können, zum Beispiel weil sie blind sind und sich die Seite vorlesen lassen.</p>
+
+  <h2>Das Grundgerüst</h2>
+  <p>Eine vollständige HTML-Datei hat immer diesen Aufbau. Tags können ineinander stecken, wie Kisten in Kisten:</p>
+  <pre><code>&lt;!doctype html&gt;
+&lt;html lang="de"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;title&gt;Steht im Browser-Tab&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    Alles, was man auf der Seite sieht, kommt hierhin.
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+  <p>Der <code>head</code> enthält Infos <em>über</em> die Seite, der <code>body</code> den sichtbaren Inhalt. <code>charset="utf-8"</code> sorgt dafür, dass Umlaute wie ä, ö, ü richtig angezeigt werden.</p>
+  <p>In der Spielwiese schreibst du nur den Inhalt des <code>body</code> ins HTML-Feld, das Grundgerüst ergänzt sie automatisch. Klick auf „Als Datei speichern“, dann bekommst du die komplette HTML-Datei mit allem Drum und Dran. Die kannst du per Doppelklick im Browser öffnen oder in einem Texteditor anschauen.</p>
+
+  <h2>Ein bisschen CSS</h2>
+  <p>Mit CSS bestimmst du das Aussehen. In einer HTML-Datei steht es in einem <code>&lt;style&gt;</code>-Tag im <code>head</code>, in der Spielwiese kommt es einfach ins CSS-Feld. Zuerst sagst du, <em>welche</em> Elemente gemeint sind (der <mark>Selektor</mark>), dann in geschweiften Klammern, <em>wie</em> sie aussehen sollen:</p>
+  <pre data-lang="css"><code>h1 {
+  color: purple;
+  font-size: 40px;
+}</code></pre>
+  <p>Mit <code>class</code> kannst du einzelnen Elementen einen Namen geben und sie in CSS mit einem Punkt ansprechen: <code>.highlight</code>. Probier in der Spielwiese andere Farben (<code>tomato</code>, <code>teal</code>, <code>#ff9900</code>) und Größen aus.</p>
+
+  <html-playground name="lesson-09-css" height="300">
+    <textarea data-lang="html">
+<h1>Meine Lieblingsspiele</h1>
+<ul>
+  <li>Minecraft</li>
+  <li class="highlight">Mario Kart</li>
+  <li>Zelda</li>
+</ul>
+<p>Mehr Infos gibt es auf <a href="https://de.wikipedia.org/wiki/Videospiel">Wikipedia</a>.</p>
+</textarea>
+    <textarea data-lang="css">
+body {
+  font-family: sans-serif;
+  background: #f0f4ff;
+  padding: 20px;
+}
+
+h1 {
+  color: purple;
+}
+
+.highlight {
+  background: yellow;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+</textarea>
+  </html-playground>
+
+  <section class="exercise">
+    <h3>Übung: Deine eigene Steckbrief-Seite</h3>
+    <p>Bau eine Seite über dich (oder dein Haustier, deinen Lieblingsverein, ein Fantasiewesen …). Sie soll enthalten:</p>
+    <ul>
+      <li>eine Überschrift <code>&lt;h1&gt;</code></li>
+      <li>einen kurzen Absatz <code>&lt;p&gt;</code></li>
+      <li>eine Liste mit mindestens drei Punkten</li>
+      <li>einen Link</li>
+      <li>mindestens zwei CSS-Regeln, zum Beispiel eine Hintergrundfarbe und eine Schriftfarbe</li>
+    </ul>
+    <p>Diese Übung wird nicht automatisch geprüft. Zeig sie jemandem! Über „Im neuen Tab“ siehst du sie groß, über „Als Datei speichern“ kannst du sie behalten.</p>
+    <html-playground name="lesson-09-profile" height="320" file-name="steckbrief">
+      <textarea data-lang="html">
+<h1>Über mich</h1>
+</textarea>
+      <textarea data-lang="css">
+body {
+
+}
+</textarea>
+    </html-playground>
+  </section>
+
+  <p class="note">Tipp: Emojis sind einfach Zeichen. Du kannst sie direkt ins HTML schreiben, z. B. 🎮 🐱 ⚽. Am Mac mit Ctrl + ⌘ + Leertaste, unter Windows mit Windows-Taste + Punkt.</p>
+</main>
+<script src="assets/course.js"></script>
+</body>
+</html>

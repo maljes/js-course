@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Objekte · Code-Heft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/course.css">
+</head>
+<body>
+<main>
+  <p class="lesson-number">Lektion 8</p>
+  <h1>Objekte</h1>
+  <p class="lead">Eine Spielfigur hat einen Namen, ein Level, Lebenspunkte und ein Inventar. Statt vier einzelner Variablen packst du alles in ein Objekt.</p>
+
+  <h2>Ein Objekt anlegen</h2>
+  <pre><code>const player = {
+  name: "Mia",
+  level: 3,
+  health: 100,
+  items: ["Schwert", "Heiltrank"],
+};</code></pre>
+  <p>Ein Objekt steht in geschweiften Klammern. Darin stehen Paare aus <mark>Eigenschaft</mark> und Wert, getrennt durch einen Doppelpunkt. Die Werte können alles sein: Zahlen, Texte, Booleans, Arrays oder sogar weitere Objekte.</p>
+
+  <h2>Eigenschaften lesen und ändern</h2>
+  <p>Mit einem Punkt kommst du an eine Eigenschaft heran: <code>player.level</code> heißt „das Level des Spielers“.</p>
+  <js-console>
+    <code>const player = { name: "Mia", level: 3, health: 100, items: ["Schwert"] }</code>
+    <code>player.name</code>
+    <code>player.level++</code>
+    <code>player.health -= 30</code>
+    <code>player.items.push("Schild")</code>
+    <code>player.coins = 50</code>
+    <code>player</code>
+  </js-console>
+  <p>Wie bei Arrays gilt: Auch ein <code>const</code>-Objekt kann man innen verändern. Neue Eigenschaften legst du einfach durch Zuweisen an, wie <code>player.coins</code> oben.</p>
+
+  <h2>Listen von Objekten</h2>
+  <p>Richtig stark wird es, wenn man Arrays und Objekte kombiniert. So sehen echte Daten fast immer aus, zum Beispiel eine Bestenliste:</p>
+  <js-editor name="lesson-08-list">
+    <textarea>
+const leaderboard = [
+  { name: "Mia", score: 320 },
+  { name: "Leon", score: 280 },
+  { name: "Ayşe", score: 410 },
+];
+
+for (const entry of leaderboard) {
+  console.log(`${entry.name}: ${entry.score} Punkte`);
+}
+
+leaderboard.push({ name: "Jonas", score: 150 });
+console.log("Einträge:", leaderboard.length);
+</textarea>
+  </js-editor>
+
+  <h2>Funktionen im Objekt</h2>
+  <p>Ein Objekt kann auch Funktionen enthalten. Sie heißen dann <mark>Methoden</mark>. Mit <code>this</code> meint die Methode „dieses Objekt hier“.</p>
+  <js-editor name="lesson-08-method">
+    <textarea>
+const dog = {
+  name: "Bello",
+  sound: "Wuff",
+  bark() {
+    console.log(`${this.name} sagt ${this.sound}!`);
+  },
+};
+
+dog.bark();
+</textarea>
+  </js-editor>
+  <p class="note">Jetzt weißt du auch, was console.log eigentlich ist: ein Objekt namens console mit einer Methode namens log!</p>
+
+  <section class="exercise">
+    <h3>Übung: Dein Profil als Objekt</h3>
+    <p>Erstelle ein Objekt <code>me</code> mit den Eigenschaften <code>name</code> (Text), <code>age</code> (Zahl) und <code>hobbies</code> (Array mit mindestens zwei Texten). Gib danach dein erstes Hobby aus.</p>
+    <js-editor check="lesson-08-me">
+      <textarea>
+const me = {
+
+};
+
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>const me = {
+  name: "Sam",
+  age: 14,
+  hobbies: ["Fußball", "Zeichnen"],
+};
+
+console.log(me.hobbies[0]);</code></pre>
+    </details>
+  </section>
+
+  <section class="exercise">
+    <h3>Übung: Inventar zählen</h3>
+    <p>Jeder Gegenstand im Inventar hat eine Anzahl <code>count</code>. Schreib <code>countItems(inventory)</code>, die zurückgibt, wie viele Gegenstände es insgesamt sind.</p>
+    <js-editor check="lesson-08-inventory">
+      <textarea>
+const inventory = [
+  { item: "Apfel", count: 3 },
+  { item: "Pfeil", count: 20 },
+  { item: "Diamant", count: 1 },
+];
+
+function countItems(inventory) {
+
+}
+
+console.log(countItems(inventory)); // soll 24 ergeben
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>function countItems(inventory) {
+  let total = 0;
+  for (const slot of inventory) {
+    total += slot.count;
+  }
+  return total;
+}</code></pre>
+    </details>
+  </section>
+</main>
+<script src="assets/course.js"></script>
+<script>
+  Course.check('lesson-08-me', ({ type, value, logs }) => {
+    if (type('me') !== 'object' || value('me') === null) return 'Ich finde kein Objekt namens me.';
+    const me = value('me');
+    if (typeof me.name !== 'string' || !me.name) return 'me.name soll ein Text sein.';
+    if (typeof me.age !== 'number') return 'me.age soll eine Zahl sein (ohne Anführungszeichen).';
+    if (!Array.isArray(me.hobbies)) return 'me.hobbies soll ein Array sein, also in eckigen Klammern [ ].';
+    if (me.hobbies.length < 2) return 'Trag mindestens zwei Hobbys ein.';
+    if (!logs.includes(me.hobbies[0])) return 'Gib am Ende dein erstes Hobby aus: me.hobbies[0]';
+    return true;
+  });
+
+  Course.check('lesson-08-inventory', ({ value }) => {
+    const countItems = value('countItems');
+    if (typeof countItems !== 'function') return 'Ich finde keine Funktion namens countItems.';
+    const cases = [
+      [[{ item: 'Apfel', count: 3 }, { item: 'Pfeil', count: 20 }, { item: 'Diamant', count: 1 }], 24],
+      [[], 0],
+      [[{ item: 'Stein', count: 64 }], 64],
+    ];
+    for (const [inventory, expected] of cases) {
+      const actual = countItems(inventory);
+      if (actual === undefined) return 'countItems gibt nichts zurück. Hast du return vergessen?';
+      if (actual !== expected) return `Für ein Inventar mit ${inventory.length} Einträgen kommt ${actual} raus, richtig wäre ${expected}.`;
+    }
+    return true;
+  });
+</script>
+</body>
+</html>

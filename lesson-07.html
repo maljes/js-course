@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arrays · Code-Heft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/course.css">
+</head>
+<body>
+<main>
+  <p class="lesson-number">Lektion 7</p>
+  <h1>Arrays (Listen)</h1>
+  <p class="lead">Eine Playlist, die Highscore-Tabelle, dein Inventar im Spiel: Ständig hat man es mit Listen zu tun. In JavaScript heißen sie Arrays.</p>
+
+  <h2>Eine Liste anlegen</h2>
+  <pre><code>const games = ["Minecraft", "Mario Kart", "Zelda"];
+const scores = [120, 85, 300, 42];</code></pre>
+  <p>Ein Array steht in eckigen Klammern <code>[ ]</code>, die Einträge werden durch Kommas getrennt. Die eckigen Klammern bekommst du mit <kbd>Alt Gr</kbd> + <kbd>8</kbd> und <kbd>9</kbd> (am Mac <kbd>⌥</kbd> + <kbd>5</kbd> und <kbd>6</kbd>).</p>
+
+  <h2>Auf Einträge zugreifen</h2>
+  <p>Jeder Eintrag hat eine Nummer, den <mark>Index</mark>. Und jetzt kommt das, worüber jeder am Anfang stolpert: <strong>Gezählt wird ab 0.</strong></p>
+  <table>
+    <tr><th>Index</th><td>0</td><td>1</td><td>2</td></tr>
+    <tr><th>Wert</th><td>"Minecraft"</td><td>"Mario Kart"</td><td>"Zelda"</td></tr>
+  </table>
+
+  <js-console>
+    <code>const games = ["Minecraft", "Mario Kart", "Zelda"]</code>
+    <code>games[0]</code>
+    <code>games[2]</code>
+    <code>games.length</code>
+    <code>games[games.length - 1]</code>
+    <code>games[5]</code>
+  </js-console>
+
+  <h2>Listen verändern</h2>
+  <table>
+    <tr><th>Befehl</th><th>Was passiert</th></tr>
+    <tr><td><code>games.push("Tetris")</code></td><td>hängt einen Eintrag hinten an</td></tr>
+    <tr><td><code>games.pop()</code></td><td>entfernt den letzten Eintrag und gibt ihn zurück</td></tr>
+    <tr><td><code>games[1] = "Pokémon"</code></td><td>ersetzt den Eintrag mit Index 1</td></tr>
+    <tr><td><code>games.includes("Zelda")</code></td><td>prüft, ob etwas in der Liste ist: true oder false</td></tr>
+    <tr><td><code>games.indexOf("Zelda")</code></td><td>sagt, an welchem Index es steht (oder -1, wenn nicht)</td></tr>
+  </table>
+  <p>Probier die Befehle in der Konsole oben aus. Obwohl <code>games</code> mit <code>const</code> erstellt wurde, kannst du den Inhalt ändern. <code>const</code> heißt nur: Die Variable zeigt immer auf <em>dieselbe</em> Liste.</p>
+
+  <h2>Durch eine Liste laufen</h2>
+  <p>Mit <code>for … of</code> bekommst du nacheinander jeden Eintrag:</p>
+  <js-editor name="lesson-07-loop">
+    <textarea>
+const games = ["Minecraft", "Mario Kart", "Zelda"];
+
+for (const game of games) {
+  console.log("Ich spiele gern " + game);
+}
+
+// Wenn du auch den Index brauchst, nimm die normale for-Schleife:
+for (let i = 0; i < games.length; i++) {
+  console.log(`Platz ${i + 1}: ${games[i]}`);
+}
+</textarea>
+  </js-editor>
+
+  <h2>Werte zusammenzählen</h2>
+  <p>Ein typisches Muster: Du startest mit einer Variable bei 0 und addierst in der Schleife jeden Eintrag dazu.</p>
+  <pre><code>const coins = [5, 10, 3];
+let total = 0;
+for (const amount of coins) {
+  total += amount;
+}
+console.log(total); // 18</code></pre>
+
+  <section class="exercise">
+    <h3>Übung: Summe</h3>
+    <p>Schreib eine Funktion <code>sum(numbers)</code>, die alle Zahlen eines Arrays zusammenzählt und das Ergebnis zurückgibt. Für eine leere Liste <code>[]</code> soll <code>0</code> herauskommen.</p>
+    <js-editor check="lesson-07-sum">
+      <textarea>
+function sum(numbers) {
+
+}
+
+console.log(sum([1, 2, 3, 4])); // soll 10 ergeben
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>function sum(numbers) {
+  let total = 0;
+  for (const number of numbers) {
+    total += number;
+  }
+  return total;
+}</code></pre>
+    </details>
+  </section>
+
+  <section class="exercise">
+    <h3>Übung: Highscore</h3>
+    <p>Schreib <code>highest(scores)</code>, die die größte Zahl der Liste zurückgibt. Löse es mit einer Schleife: Merk dir den bisher größten Wert und vergleiche jeden Eintrag damit.</p>
+    <js-editor check="lesson-07-highest">
+      <textarea>
+function highest(scores) {
+
+}
+
+console.log(highest([120, 85, 300, 42])); // soll 300 ergeben
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>function highest(scores) {
+  let best = scores[0];
+  for (const score of scores) {
+    if (score &gt; best) {
+      best = score;
+    }
+  }
+  return best;
+}</code></pre>
+      <p>Warum startet <code>best</code> mit <code>scores[0]</code> und nicht mit 0? Überleg mal, was bei <code>[-5, -2, -9]</code> passieren würde.</p>
+    </details>
+  </section>
+
+  <section class="exercise">
+    <h3>Übung: Nur die Bestandenen</h3>
+    <p>Schreib <code>passed(scores)</code>, die ein <em>neues</em> Array zurückgibt, in dem nur die Werte ab 50 stehen. Tipp: Starte mit einer leeren Liste <code>[]</code> und benutze <code>push</code>.</p>
+    <js-editor check="lesson-07-passed">
+      <textarea>
+function passed(scores) {
+
+}
+
+console.log(passed([30, 75, 50, 12, 99])); // soll [75, 50, 99] ergeben
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>function passed(scores) {
+  const result = [];
+  for (const score of scores) {
+    if (score &gt;= 50) {
+      result.push(score);
+    }
+  }
+  return result;
+}</code></pre>
+    </details>
+  </section>
+</main>
+<script src="assets/course.js"></script>
+<script>
+  // Compares via JSON so arrays from the sandbox iframe can be checked too.
+  function checkFunction(fn, name, cases) {
+    if (typeof fn !== 'function') return `Ich finde keine Funktion namens ${name}. Stimmt der Name genau?`;
+    for (const [input, expected] of cases) {
+      const label = `${name}(${JSON.stringify(input)})`;
+      const actual = fn(input.slice());
+      if (actual === undefined) return `${label} gibt nichts zurück. Hast du return vergessen?`;
+      if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+        return `${label} ergibt ${JSON.stringify(actual)}, sollte aber ${JSON.stringify(expected)} sein.`;
+      }
+    }
+    return true;
+  }
+
+  Course.check('lesson-07-sum', ({ value }) =>
+    checkFunction(value('sum'), 'sum', [[[1, 2, 3, 4], 10], [[], 0], [[7], 7], [[-5, 5, 10], 10]]));
+
+  Course.check('lesson-07-highest', ({ value }) =>
+    checkFunction(value('highest'), 'highest', [[[120, 85, 300, 42], 300], [[1], 1], [[-5, -2, -9], -2], [[4, 9, 9, 2], 9]]));
+
+  Course.check('lesson-07-passed', ({ value }) =>
+    checkFunction(value('passed'), 'passed', [[[30, 75, 50, 12, 99], [75, 50, 99]], [[], []], [[10, 20], []], [[50, 100], [50, 100]]]));
+</script>
+</body>
+</html>

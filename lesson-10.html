@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JavaScript trifft HTML · Code-Heft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/course.css">
+</head>
+<body>
+<main>
+  <p class="lesson-number">Lektion 10</p>
+  <h1>JavaScript trifft HTML</h1>
+  <p class="lead">Jetzt kommt alles zusammen. Mit JavaScript kannst du eine Webseite verändern, während man sie anschaut: Texte austauschen, Farben wechseln, auf Klicks reagieren.</p>
+
+  <h2>Der Baum der Seite</h2>
+  <p>Wenn der Browser HTML liest, baut er daraus einen Baum aus Objekten, das <mark>DOM</mark> (Document Object Model). Jedes Tag wird zu einem Objekt mit Eigenschaften, die du mit JavaScript lesen und ändern kannst. Der Einstieg ist das Objekt <code>document</code>.</p>
+
+  <h2>Elemente finden</h2>
+  <p>Mit <code>document.querySelector(…)</code> holst du dir ein Element. In die Klammern kommt ein Selektor, genau wie in CSS:</p>
+  <table>
+    <tr><th>Selektor</th><th>findet</th></tr>
+    <tr><td><code>"h1"</code></td><td>das erste <code>&lt;h1&gt;</code></td></tr>
+    <tr><td><code>"#score"</code></td><td>das Element mit <code>id="score"</code></td></tr>
+    <tr><td><code>".card"</code></td><td>das erste Element mit <code>class="card"</code></td></tr>
+  </table>
+  <p>Eine <code>id</code> ist wie ein Name, den es auf der Seite nur einmal geben darf. Dadurch findest du genau das richtige Element.</p>
+
+  <h2>Elemente verändern</h2>
+  <p>Ab jetzt benutzt du das JS-Feld der Spielwiese. Schau dir an, wie der Code im JS-Feld die Elemente aus dem HTML-Feld findet und verändert:</p>
+  <html-playground name="lesson-10-change" height="200" editor-height="260">
+    <textarea data-lang="html">
+<h1 id="title">Hallo!</h1>
+<p id="message">Dieser Text wird gleich ersetzt.</p>
+</textarea>
+    <textarea data-lang="js">
+const title = document.querySelector("#title");
+title.textContent = "Hallo aus JavaScript!";
+title.style.color = "crimson";
+
+const message = document.querySelector("#message");
+message.textContent = "Diesen Text hat JavaScript geschrieben.";
+
+console.log("Das h1 ist:", title);
+</textarea>
+  </html-playground>
+
+  <ul>
+    <li><code>element.textContent = "…"</code> ersetzt den Text.</li>
+    <li><code>element.style.color = "…"</code> ändert CSS. Aus <code>background-color</code> wird in JavaScript <code>backgroundColor</code>.</li>
+    <li><code>element.classList.add("…")</code> und <code>.remove("…")</code> fügen CSS-Klassen hinzu oder nehmen sie weg.</li>
+  </ul>
+
+  <p class="note warning">In einer echten HTML-Datei steht das &lt;script&gt; ganz unten im body. Warum? Der Browser liest von oben nach unten. Stünde das Skript oben, gäbe es das h1 noch gar nicht, und querySelector fände nichts (null). Die Spielwiese setzt dein JS automatisch an die richtige Stelle. Schau mal in die gespeicherte Datei!</p>
+
+  <h2>Auf Klicks reagieren</h2>
+  <p>Jetzt wird es interaktiv. Mit <code>addEventListener</code> sagst du einem Element: „Wenn das hier passiert, führe diese Funktion aus.“ So etwas nennt man ein <mark>Event</mark>.</p>
+  <html-playground name="lesson-10-counter" height="220">
+    <textarea data-lang="html">
+<p id="count">0</p>
+<button id="plus">+1</button>
+</textarea>
+    <textarea data-lang="css">
+body {
+  font-family: sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+#count {
+  font-size: 64px;
+  margin: 10px;
+}
+
+button {
+  font-size: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+</textarea>
+    <textarea data-lang="js">
+const countDisplay = document.querySelector("#count");
+const plusButton = document.querySelector("#plus");
+let count = 0;
+
+plusButton.addEventListener("click", () => {
+  count++;
+  countDisplay.textContent = count;
+  console.log("Geklickt! Stand:", count);
+});
+</textarea>
+  </html-playground>
+  <p>Die Funktion <code>() =&gt; { … }</code> ist eine Pfeilfunktion ohne Namen. Sie wird nicht sofort ausgeführt, sondern erst, wenn jemand klickt. Deshalb sagt man auch <mark>Callback</mark>: Der Browser „ruft zurück“, wenn es so weit ist.</p>
+
+  <h2>Eingaben lesen</h2>
+  <p>Was jemand in ein <code>&lt;input&gt;</code> tippt, steht in <code>.value</code>. Denk an Lektion 3: Das ist immer ein Text! Für Zahlen brauchst du <code>Number(…)</code>.</p>
+  <html-playground name="lesson-10-input" height="200">
+    <textarea data-lang="html">
+<label for="name">Wie heißt du?</label>
+<input id="name">
+<button id="greet">Begrüßen</button>
+<p id="output"></p>
+</textarea>
+    <textarea data-lang="css">
+body {
+  font-family: sans-serif;
+  padding: 20px;
+}
+
+input, button {
+  font-size: 18px;
+  padding: 6px 10px;
+}
+</textarea>
+    <textarea data-lang="js">
+const nameInput = document.querySelector("#name");
+const greetButton = document.querySelector("#greet");
+const output = document.querySelector("#output");
+
+greetButton.addEventListener("click", () => {
+  const name = nameInput.value;
+  if (name === "") {
+    output.textContent = "Du musst schon einen Namen eingeben 🙂";
+  } else {
+    output.textContent = `Hallo ${name}, schön dich kennenzulernen!`;
+  }
+});
+</textarea>
+  </html-playground>
+
+  <section class="exercise">
+    <h3>Übung: Zähler erweitern</h3>
+    <p>Bau den Klickzähler von oben aus:</p>
+    <ol>
+      <li>Füge einen Button <strong>−1</strong> hinzu, der den Zähler verringert.</li>
+      <li>Füge einen Button <strong>Zurücksetzen</strong> hinzu, der auf 0 stellt.</li>
+      <li>Bonus: Wenn der Zähler unter 0 ist, wird die Zahl rot, sonst schwarz.</li>
+    </ol>
+    <html-playground name="lesson-10-exercise" height="220" file-name="zaehler">
+      <textarea data-lang="html">
+<p id="count">0</p>
+<button id="plus">+1</button>
+</textarea>
+      <textarea data-lang="css">
+body {
+  font-family: sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+#count {
+  font-size: 64px;
+  margin: 10px;
+}
+
+button {
+  font-size: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+</textarea>
+      <textarea data-lang="js">
+const countDisplay = document.querySelector("#count");
+const plusButton = document.querySelector("#plus");
+let count = 0;
+
+plusButton.addEventListener("click", () => {
+  count++;
+  countDisplay.textContent = count;
+});
+</textarea>
+    </html-playground>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <p>HTML:</p>
+      <pre><code>&lt;p id="count"&gt;0&lt;/p&gt;
+&lt;button id="minus"&gt;−1&lt;/button&gt;
+&lt;button id="plus"&gt;+1&lt;/button&gt;
+&lt;button id="reset"&gt;Zurücksetzen&lt;/button&gt;</code></pre>
+      <p>JS:</p>
+      <pre><code>const countDisplay = document.querySelector("#count");
+let count = 0;
+
+function render() {
+  countDisplay.textContent = count;
+  countDisplay.style.color = count &lt; 0 ? "red" : "black";
+}
+
+document.querySelector("#plus").addEventListener("click", () =&gt; {
+  count++;
+  render();
+});
+document.querySelector("#minus").addEventListener("click", () =&gt; {
+  count--;
+  render();
+});
+document.querySelector("#reset").addEventListener("click", () =&gt; {
+  count = 0;
+  render();
+});</code></pre>
+      <p>Die Funktion <code>render</code> verhindert, dass man denselben Code dreimal schreibt. <code>bedingung ? a : b</code> ist eine Kurzform für if/else: „Wenn die Bedingung stimmt, nimm a, sonst b.“</p>
+    </details>
+  </section>
+
+  <section class="exercise">
+    <h3>Übung: Taschenrechner für zwei Zahlen</h3>
+    <p>Beim Klick auf „Addieren“ soll die Summe der beiden Zahlen darunter erscheinen. Teste mit 2 und 3. Kommt 5 raus oder 23? Wenn 23: Woran liegt's?</p>
+    <html-playground name="lesson-10-calculator" height="180" file-name="rechner">
+      <textarea data-lang="html">
+<input id="first" type="number">
++
+<input id="second" type="number">
+<button id="add">Addieren</button>
+<p id="result"></p>
+</textarea>
+      <textarea data-lang="js">
+// Dein Code
+</textarea>
+    </html-playground>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>const first = document.querySelector("#first");
+const second = document.querySelector("#second");
+const result = document.querySelector("#result");
+
+document.querySelector("#add").addEventListener("click", () =&gt; {
+  const sum = Number(first.value) + Number(second.value);
+  result.textContent = `Ergebnis: ${sum}`;
+});</code></pre>
+    </details>
+  </section>
+</main>
+<script src="assets/course.js"></script>
+</body>
+</html>

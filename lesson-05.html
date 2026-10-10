@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Schleifen · Code-Heft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/course.css">
+</head>
+<body>
+<main>
+  <p class="lesson-number">Lektion 5</p>
+  <h1>Schleifen</h1>
+  <p class="lead">Schreib 100-mal „Ich soll im Unterricht nicht schwatzen“. Mit der Hand eine Strafe, mit JavaScript drei Zeilen. Computer lieben Wiederholungen.</p>
+
+  <h2>Die for-Schleife</h2>
+  <js-editor name="lesson-05-demo">
+    <textarea>
+for (let i = 1; i <= 5; i++) {
+  console.log("Runde " + i);
+}
+console.log("Fertig!");
+</textarea>
+  </js-editor>
+
+  <p>Die runden Klammern haben drei Teile, getrennt durch <code>;</code>:</p>
+  <table>
+    <tr><th>Teil</th><th>Bedeutung</th></tr>
+    <tr><td><code>let i = 1</code></td><td><strong>Start</strong>: Ein Zähler namens <code>i</code> beginnt bei 1. Das passiert nur einmal.</td></tr>
+    <tr><td><code>i &lt;= 5</code></td><td><strong>Bedingung</strong>: Vor jeder Runde wird geprüft: Ist sie noch true? Dann geht's weiter, sonst ist Schluss.</td></tr>
+    <tr><td><code>i++</code></td><td><strong>Schritt</strong>: Nach jeder Runde wird <code>i</code> um 1 erhöht.</td></tr>
+  </table>
+  <p class="note">Ändere das Programm so, dass es bis 100 zählt. Dann so, dass es nur gerade Zahlen ausgibt. Tipp: i += 2.</p>
+
+  <h2>Die while-Schleife</h2>
+  <p>Manchmal weiß man vorher nicht, wie oft etwas wiederholt werden muss. Dann nimmt man <code>while</code> („solange“):</p>
+  <js-editor name="lesson-05-while">
+    <textarea>
+let money = 100;
+let weeks = 0;
+
+// Jede Woche 15 € für Snacks ausgeben, solange das Geld reicht
+while (money >= 15) {
+  money -= 15;
+  weeks++;
+}
+
+console.log(`Das Geld reicht ${weeks} Wochen. Übrig: ${money} €`);
+</textarea>
+  </js-editor>
+
+  <h2>Achtung, Endlosschleife!</h2>
+  <p>Wenn die Bedingung <em>nie</em> <code>false</code> wird, läuft die Schleife für immer. Im echten Browser friert dann der Tab ein. Hier im Heft passt ein Wächter auf und bricht ab. Probier es ruhig aus:</p>
+  <js-editor name="lesson-05-infinite">
+    <textarea>
+let i = 1;
+while (i <= 10) {
+  console.log(i);
+  // Hier fehlt i++ – i bleibt für immer 1!
+}
+</textarea>
+  </js-editor>
+
+  <h2>Schleifen und if zusammen</h2>
+  <p>Innerhalb einer Schleife kannst du alles benutzen, was du schon kennst. Hier werden nur die Zahlen ausgegeben, die durch 3 teilbar sind:</p>
+  <pre><code>for (let i = 1; i &lt;= 20; i++) {
+  if (i % 3 === 0) {
+    console.log(i);
+  }
+}</code></pre>
+
+  <section class="exercise">
+    <h3>Übung: Countdown</h3>
+    <p>Zähle von 10 rückwärts bis 1 und gib danach <code>Start!</code> aus. Tipp: Der Zähler startet bei 10 und wird mit <code>i--</code> kleiner.</p>
+    <js-editor check="lesson-05-countdown" success="3, 2, 1 … Start! 🚀">
+      <textarea>
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>for (let i = 10; i &gt;= 1; i--) {
+  console.log(i);
+}
+console.log("Start!");</code></pre>
+    </details>
+  </section>
+
+  <section class="exercise">
+    <h3>Übung: Das Einmaleins der 7</h3>
+    <p>Gib die Siebenerreihe aus, genau in diesem Format:</p>
+    <pre><code>1 x 7 = 7
+2 x 7 = 14
+…
+10 x 7 = 70</code></pre>
+    <js-editor check="lesson-05-table">
+      <textarea>
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>for (let i = 1; i &lt;= 10; i++) {
+  console.log(`${i} x 7 = ${i * 7}`);
+}</code></pre>
+    </details>
+  </section>
+
+  <section class="exercise">
+    <h3>Bonus: FizzBuzz</h3>
+    <p>Ein Klassiker, der sogar in Bewerbungsgesprächen für Programmierer gefragt wird. Gib die Zahlen von 1 bis 30 aus, aber:</p>
+    <ul>
+      <li>statt Zahlen, die durch 3 teilbar sind: <code>Fizz</code></li>
+      <li>statt Zahlen, die durch 5 teilbar sind: <code>Buzz</code></li>
+      <li>statt Zahlen, die durch 3 und 5 teilbar sind: <code>FizzBuzz</code></li>
+    </ul>
+    <js-editor check="lesson-05-fizzbuzz" success="FizzBuzz gelöst! Das schaffen nicht mal alle Bewerber.">
+      <textarea>
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>for (let i = 1; i &lt;= 30; i++) {
+  if (i % 15 === 0) {
+    console.log("FizzBuzz");
+  } else if (i % 3 === 0) {
+    console.log("Fizz");
+  } else if (i % 5 === 0) {
+    console.log("Buzz");
+  } else {
+    console.log(i);
+  }
+}</code></pre>
+      <p>Der Trick: Den Fall „durch 3 und 5“ (also durch 15) musst du zuerst prüfen.</p>
+    </details>
+  </section>
+</main>
+<script src="assets/course.js"></script>
+<script>
+  // Compares the learner's output line by line and names the first difference.
+  function compareLines(actual, expected) {
+    for (let i = 0; i < expected.length; i++) {
+      if (actual[i] === undefined) return `Nach „${expected[i - 1]}“ fehlt noch etwas. Als Nächstes käme „${expected[i]}“.`;
+      if (actual[i].trim() !== expected[i]) return `Zeile ${i + 1}: Da steht „${actual[i]}“, erwartet war „${expected[i]}“.`;
+    }
+    if (actual.length > expected.length) return `Es gibt ${actual.length - expected.length} Ausgabe(n) zu viel: „${actual[expected.length]}“.`;
+    return true;
+  }
+
+  Course.check('lesson-05-countdown', ({ logs }) =>
+    compareLines(logs, ['10', '9', '8', '7', '6', '5', '4', '3', '2', '1', 'Start!']));
+
+  Course.check('lesson-05-table', ({ logs }) =>
+    compareLines(logs, Array.from({ length: 10 }, (_, i) => `${i + 1} x 7 = ${(i + 1) * 7}`)));
+
+  Course.check('lesson-05-fizzbuzz', ({ logs }) => {
+    const expected = Array.from({ length: 30 }, (_, i) => {
+      const n = i + 1;
+      return n % 15 === 0 ? 'FizzBuzz' : n % 3 === 0 ? 'Fizz' : n % 5 === 0 ? 'Buzz' : String(n);
+    });
+    return compareLines(logs, expected);
+  });
+</script>
+</body>
+</html>

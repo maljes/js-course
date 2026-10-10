@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Projekt: Zahlenraten · Code-Heft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/course.css">
+</head>
+<body>
+<main>
+  <p class="lesson-number">Lektion 11</p>
+  <h1>Projekt: Zahlenraten</h1>
+  <p class="lead">Zeit für dein erstes richtiges Spiel. Der Computer denkt sich eine Zahl zwischen 1 und 100 aus, du rätst. Nach jedem Tipp sagt er „zu hoch“ oder „zu niedrig“.</p>
+
+  <h2>Erst planen, dann programmieren</h2>
+  <p>Profis schreiben nicht einfach drauflos. Sie zerlegen ein Problem zuerst in kleine Schritte. Für unser Spiel:</p>
+  <ol>
+    <li>Eine geheime Zufallszahl zwischen 1 und 100 erzeugen.</li>
+    <li>Ein Eingabefeld und einen Button „Raten“ anzeigen.</li>
+    <li>Beim Klick die Eingabe lesen und in eine Zahl umwandeln.</li>
+    <li>Vergleichen: zu hoch, zu niedrig oder richtig?</li>
+    <li>Die Versuche zählen und anzeigen.</li>
+    <li>Bei einem Treffer gratulieren und einen Neustart ermöglichen.</li>
+  </ol>
+  <p>Alles davon kennst du schon, bis auf Schritt 1.</p>
+
+  <h2>Zufallszahlen</h2>
+  <p><code>Math.random()</code> liefert eine zufällige Kommazahl zwischen 0 und 1 (zum Beispiel 0.7314…). Um daraus eine ganze Zahl von 1 bis 100 zu machen, sind drei Schritte nötig. Probier sie nacheinander aus und führ jede Zeile mehrmals aus:</p>
+  <js-console>
+    <code>Math.random()</code>
+    <code>Math.random() * 100</code>
+    <code>Math.floor(Math.random() * 100)</code>
+    <code>Math.floor(Math.random() * 100) + 1</code>
+  </js-console>
+  <ul>
+    <li><code>* 100</code> macht daraus eine Zahl zwischen 0 und 99,999…</li>
+    <li><code>Math.floor</code> schneidet die Nachkommastellen ab: 0 bis 99</li>
+    <li><code>+ 1</code> verschiebt alles um eins: 1 bis 100</li>
+  </ul>
+
+  <section class="exercise">
+    <h3>Übung: Würfel</h3>
+    <p>Schreib eine Funktion <code>rollDice()</code>, die eine zufällige ganze Zahl von 1 bis 6 zurückgibt. Ich würfle damit tausendmal und schaue, ob alles passt.</p>
+    <js-editor check="lesson-11-dice">
+      <textarea>
+function rollDice() {
+
+}
+
+console.log(rollDice(), rollDice(), rollDice());
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>function rollDice() {
+  return Math.floor(Math.random() * 6) + 1;
+}</code></pre>
+    </details>
+  </section>
+
+  <h2>Das Spiel bauen</h2>
+  <p>Hier ist das Gerüst. HTML und CSS sind fertig, im JS-Feld sind die Schritte als Kommentare vorbereitet. Füll die Lücken Schritt für Schritt und teste nach jedem Schritt. Mit <code>console.log</code> kannst du nachschauen, ob alles klappt. Die Ausgabe erscheint unter der Vorschau.</p>
+
+  <html-playground name="lesson-11-game" label="Zahlenraten" height="360" editor-height="380" file-name="zahlenraten">
+    <textarea data-lang="html">
+<h1>Zahlenraten</h1>
+<p>Ich denke an eine Zahl zwischen 1 und 100.</p>
+
+<input id="guess" type="number" min="1" max="100">
+<button id="check">Raten</button>
+
+<p id="feedback"></p>
+<p id="attempts">Versuche: 0</p>
+<button id="restart">Nochmal spielen</button>
+</textarea>
+    <textarea data-lang="css">
+body {
+  font-family: system-ui, sans-serif;
+  background: #1d3a9e;
+  color: white;
+  text-align: center;
+  padding: 30px 16px;
+}
+
+h1 {
+  margin-top: 0;
+}
+
+input, button {
+  font-size: 22px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+}
+
+input {
+  width: 100px;
+  text-align: center;
+}
+
+button {
+  background: #ffe45c;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#feedback {
+  font-size: 26px;
+  min-height: 36px;
+}
+
+#restart {
+  display: none;
+  margin-top: 10px;
+}
+</textarea>
+    <textarea data-lang="js">
+const guessInput = document.querySelector("#guess");
+const checkButton = document.querySelector("#check");
+const feedback = document.querySelector("#feedback");
+const attemptsDisplay = document.querySelector("#attempts");
+const restartButton = document.querySelector("#restart");
+
+// Schritt 1: Erzeuge eine Zufallszahl von 1 bis 100
+let secretNumber = 0;
+let attempts = 0;
+
+checkButton.addEventListener("click", () => {
+  // Schritt 3: Lies die Eingabe und wandle sie in eine Zahl um
+  const guess = 0;
+
+  // Schritt 5: Erhöhe attempts und zeig den Stand in attemptsDisplay an
+
+  // Schritt 4: Vergleiche guess mit secretNumber
+  // und schreib "Zu hoch!", "Zu niedrig!" oder "Richtig! 🎉" in feedback
+
+});
+
+// Schritt 6: Bei einem Treffer restartButton anzeigen
+// (restartButton.style.display = "inline-block")
+// und beim Klick darauf alles zurücksetzen.
+</textarea>
+  </html-playground>
+
+  <details class="solution"><summary>Komplette Lösung (JS) anzeigen</summary>
+    <pre><code>const guessInput = document.querySelector("#guess");
+const checkButton = document.querySelector("#check");
+const feedback = document.querySelector("#feedback");
+const attemptsDisplay = document.querySelector("#attempts");
+const restartButton = document.querySelector("#restart");
+
+let secretNumber = Math.floor(Math.random() * 100) + 1;
+let attempts = 0;
+
+checkButton.addEventListener("click", () =&gt; {
+  const guess = Number(guessInput.value);
+
+  attempts++;
+  attemptsDisplay.textContent = `Versuche: ${attempts}`;
+
+  if (guess &gt; secretNumber) {
+    feedback.textContent = "Zu hoch!";
+  } else if (guess &lt; secretNumber) {
+    feedback.textContent = "Zu niedrig!";
+  } else {
+    feedback.textContent = `Richtig! 🎉 Die Zahl war ${secretNumber}.`;
+    restartButton.style.display = "inline-block";
+  }
+
+  guessInput.value = "";
+  guessInput.focus();
+});
+
+restartButton.addEventListener("click", () =&gt; {
+  secretNumber = Math.floor(Math.random() * 100) + 1;
+  attempts = 0;
+  attemptsDisplay.textContent = "Versuche: 0";
+  feedback.textContent = "";
+  restartButton.style.display = "none";
+});</code></pre>
+  </details>
+
+  <h2>Mach es zu deinem Spiel</h2>
+  <p>Wenn es läuft, kannst du es erweitern. Such dir etwas aus:</p>
+  <ul>
+    <li>Prüfe, ob die Eingabe wirklich zwischen 1 und 100 liegt, und zähle ungültige Versuche nicht mit.</li>
+    <li>Nach 7 Fehlversuchen ist das Spiel verloren.</li>
+    <li>Wechsle die Hintergrundfarbe: rot bei „zu hoch“, blau bei „zu niedrig“, grün bei „richtig“.</li>
+    <li>Raten auch mit <kbd>Enter</kbd> statt nur per Klick. Tipp: das Event <code>"keydown"</code> und <code>event.key === "Enter"</code>.</li>
+    <li>Merke dir den Rekord (die wenigsten Versuche) in einer Variable und zeig ihn an.</li>
+    <li>Fertig? Mit „Als Datei speichern“ bekommst du dein Spiel als eigene HTML-Datei. Die kannst du verschicken oder auf einem USB-Stick mitnehmen.</li>
+  </ul>
+
+  <h2>Wie geht es weiter?</h2>
+  <p>Du hast jetzt die Grundbausteine fast jeder Programmiersprache kennengelernt: Variablen, Bedingungen, Schleifen, Funktionen, Listen und Objekte. Damit kannst du schon erstaunlich viel bauen. Ein paar Ideen für die nächsten Projekte:</p>
+  <ul>
+    <li><strong>Schere, Stein, Papier</strong> gegen den Computer</li>
+    <li><strong>Quiz</strong> mit einem Array von Fragen-Objekten</li>
+    <li><strong>To-do-Liste</strong>, bei der man Einträge hinzufügen und abhaken kann</li>
+    <li><strong>Reaktionstest</strong>: Wie schnell klickst du, wenn der Bildschirm grün wird?</li>
+  </ul>
+  <p>Zum Nachschlagen ist das <a href="https://developer.mozilla.org/de/docs/Web/JavaScript">MDN Web Docs</a> die beste Quelle. Das benutzen auch Profis jeden Tag.</p>
+
+  <p class="note">Du bist jetzt offiziell Programmierer:in. Ganz ehrlich: Der wichtigste Skill ist nicht, alles auswendig zu wissen, sondern nicht aufzugeben, wenn etwas nicht klappt. Den hast du jetzt elf Lektionen lang trainiert.</p>
+</main>
+<script src="assets/course.js"></script>
+<script>
+  Course.check('lesson-11-dice', ({ value }) => {
+    const rollDice = value('rollDice');
+    if (typeof rollDice !== 'function') return 'Ich finde keine Funktion namens rollDice.';
+    const seen = new Set();
+    for (let i = 0; i < 1000; i++) {
+      const roll = rollDice();
+      if (roll === undefined) return 'rollDice gibt nichts zurück. Hast du return vergessen?';
+      if (!Number.isInteger(roll)) return `rollDice hat ${roll} gewürfelt. Das ist keine ganze Zahl. Hast du Math.floor benutzt?`;
+      if (roll < 1 || roll > 6) return `rollDice hat ${roll} gewürfelt. Erlaubt sind nur 1 bis 6.`;
+      seen.add(roll);
+    }
+    if (seen.size < 6) return `In 1000 Würfen kamen nur diese Zahlen vor: ${[...seen].sort().join(', ')}. Es sollten alle von 1 bis 6 sein.`;
+    return true;
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Code-Heft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/course.css">
+</head>
+<body>
+<main>
+  <p class="lesson-number">Los geht's</p>
+  <h1>Programmieren lernen mit JavaScript und HTML</h1>
+
+  <p class="lead">Ein Computer ist unglaublich schnell, aber völlig ahnungslos. Er macht genau das, was man ihm sagt, nicht mehr und nicht weniger. Programmieren heißt: ihm Schritt für Schritt aufschreiben, was er tun soll.</p>
+
+  <h2>Was ist ein Programm?</h2>
+  <p>Stell dir ein Kochrezept vor: „Nimm 2 Eier. Schlag sie auf. Rühre 3 Minuten.“ Ein Programm ist genau so etwas, nur für einen Computer. Es besteht aus <mark>Befehlen</mark>, die nacheinander ausgeführt werden, von oben nach unten.</p>
+  <p>Der Unterschied zum Rezept: Der Computer rät nie. Wenn du dich vertippst, versteht er dich nicht. Das klingt streng, ist aber auch praktisch, denn er macht dafür auch nie etwas anderes, als du ihm sagst.</p>
+
+  <h2>Warum JavaScript?</h2>
+  <ul>
+    <li>Es läuft in jedem Browser. Du musst nichts installieren.</li>
+    <li>Fast jede Webseite benutzt es: YouTube, Instagram, Online-Spiele.</li>
+    <li>Zusammen mit <strong>HTML</strong> (dem Aufbau einer Seite) kannst du am Ende eigene Webseiten und kleine Spiele bauen.</li>
+  </ul>
+
+  <h2>Dein erster Befehl</h2>
+  <p>Das dunkle Feld unten ist eine <mark>Konsole</mark>. Hier kannst du direkt mit JavaScript reden. Klick hinein, tipp <code>2 + 2</code> und drück <kbd>Enter</kbd>.</p>
+
+  <js-console>
+    <code>2 + 2</code>
+    <code>7 * 6</code>
+    <code>"Hallo!"</code>
+    <code>100 / 3</code>
+  </js-console>
+
+  <p class="note">Glückwunsch, du hast gerade programmiert! Der Computer hat deinen Befehl gelesen, ausgeführt und das Ergebnis gezeigt.</p>
+
+  <h2>So funktioniert dieses Heft</h2>
+  <ul>
+    <li><strong>Konsole</strong>: zum schnellen Ausprobieren, Zeile für Zeile. Mit <kbd>↑</kbd> holst du frühere Befehle zurück.</li>
+    <li><strong>Programm</strong>: ein Editor für mehrere Zeilen. <kbd>Strg</kbd> + <kbd>Enter</kbd> (am Mac <kbd>⌘</kbd> + <kbd>Enter</kbd>) führt ihn aus.</li>
+    <li><strong>Übungen</strong> mit einem ✎ prüfen automatisch, ob deine Lösung stimmt.</li>
+    <li>Wenn etwas schiefgeht, erklärt dir der <span style="color: var(--red)">Rotstift</span>, was die Fehlermeldung bedeutet.</li>
+    <li>Dein Code und dein Fortschritt werden in diesem Browser gespeichert.</li>
+  </ul>
+
+  <p class="note warning">Fehler sind völlig normal. Auch Profis bekommen jeden Tag Dutzende Fehlermeldungen. Lies sie, sie verraten dir meistens, was los ist.</p>
+
+  <h2>Das lernst du</h2>
+  <ol class="lesson-map">
+    <li><a href="lesson-01.html">1 · Die Konsole</a><span>Rechnen, Texte, console.log</span></li>
+    <li><a href="lesson-02.html">2 · Variablen</a><span>Werte speichern und verändern</span></li>
+    <li><a href="lesson-03.html">3 · Datentypen &amp; Vergleiche</a><span>Zahlen, Texte, true und false</span></li>
+    <li><a href="lesson-04.html">4 · Entscheidungen mit if</a><span>Das Programm reagiert auf Situationen</span></li>
+    <li><a href="lesson-05.html">5 · Schleifen</a><span>Dinge wiederholen, ohne zu tippen</span></li>
+    <li><a href="lesson-06.html">6 · Funktionen</a><span>Eigene Befehle bauen</span></li>
+    <li><a href="lesson-07.html">7 · Arrays</a><span>Listen von Werten</span></li>
+    <li><a href="lesson-08.html">8 · Objekte</a><span>Zusammengehörige Daten bündeln</span></li>
+    <li><a href="lesson-09.html">9 · HTML-Grundlagen</a><span>Das Gerüst einer Webseite</span></li>
+    <li><a href="lesson-10.html">10 · JavaScript trifft HTML</a><span>Buttons, Eingaben, Klicks</span></li>
+    <li><a href="lesson-11.html">11 · Projekt: Zahlenraten</a><span>Dein erstes eigenes Spiel</span></li>
+  </ol>
+
+  <section class="teacher">
+    <h2>Für Lehrende</h2>
+    <p>Der Kurs ist für Jugendliche ab etwa 12 Jahren ohne Vorkenntnisse gedacht. Rechne mit 45 bis 60 Minuten pro Lektion. Lektion 1 bis 8 legen die Grundlagen in der Konsole, ab Lektion 9 entstehen echte Webseiten.</p>
+    <ul>
+      <li>Lass selbst tippen statt kopieren. Die Tippfehler gehören zum Lernen dazu.</li>
+      <li>Lies Fehlermeldungen gemeinsam laut vor, bevor du hilfst.</li>
+      <li>Die Lösungen sind in jeder Übung eingeklappt. Erst nach einem echten Versuch aufklappen.</li>
+      <li>Zeig früh die echte Browser-Konsole (<kbd>F12</kbd> oder <kbd>⌘</kbd> + <kbd>⌥</kbd> + <kbd>I</kbd>). Alles hier funktioniert dort genauso.</li>
+      <li>In den Beispielen heißen Variablen und Funktionen bewusst englisch, so wie in echtem Code weltweit üblich.</li>
+    </ul>
+    <p>Fortschritt und gespeicherter Code liegen nur im Browser dieses Geräts. <button type="button" class="text-button" onclick="Course.resetProgress()">Alles zurücksetzen</button></p>
+  </section>
+</main>
+<script src="assets/course.js"></script>
+</body>
+</html>

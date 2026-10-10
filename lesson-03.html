@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Datentypen &amp; Vergleiche · Code-Heft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/course.css">
+</head>
+<body>
+<main>
+  <p class="lesson-number">Lektion 3</p>
+  <h1>Datentypen &amp; Vergleiche</h1>
+  <p class="lead">Nicht jeder Wert ist gleich. Eine Zahl kann man teilen, einen Text nicht. Und manchmal braucht man nur eine Antwort: ja oder nein.</p>
+
+  <h2>Die drei wichtigsten Typen</h2>
+  <table>
+    <tr><th>Typ</th><th>Was ist das?</th><th>Beispiele</th></tr>
+    <tr><td><code>number</code></td><td>Zahlen, ganz oder mit Komma</td><td><code>42</code>, <code>-3</code>, <code>9.99</code></td></tr>
+    <tr><td><code>string</code></td><td>Text in Anführungszeichen</td><td><code>"Hallo"</code>, <code>"42"</code></td></tr>
+    <tr><td><code>boolean</code></td><td>Wahrheitswert: nur zwei Möglichkeiten</td><td><code>true</code> (wahr), <code>false</code> (falsch)</td></tr>
+  </table>
+  <p>Mit <code>typeof</code> fragst du JavaScript, welcher Typ ein Wert ist:</p>
+
+  <js-console>
+    <code>typeof 42</code>
+    <code>typeof "42"</code>
+    <code>typeof true</code>
+    <code>typeof undefined</code>
+  </js-console>
+
+  <h2>Die große Falle: "5" + 3</h2>
+  <p>Was kommt bei <code>"5" + 3</code> raus? Probier es aus, bevor du weiterliest.</p>
+
+  <js-console>
+    <code>"5" + 3</code>
+    <code>5 + 3</code>
+    <code>Number("5") + 3</code>
+    <code>"5" * 3</code>
+  </js-console>
+
+  <p>Weil <code>"5"</code> ein Text ist, hängt <code>+</code> die beiden einfach aneinander: <code>"53"</code>. Mit <code>Number(…)</code> wandelst du einen Text in eine Zahl um. Das wird später wichtig, denn alles, was jemand in ein Eingabefeld tippt, ist erst mal ein Text.</p>
+
+  <h2>Vergleichen</h2>
+  <p>Vergleiche ergeben immer einen Boolean, also <code>true</code> oder <code>false</code>:</p>
+  <table>
+    <tr><th>Zeichen</th><th>Frage</th><th>Beispiel</th></tr>
+    <tr><td><code>===</code></td><td>Ist gleich?</td><td><code>3 === 3</code> → true</td></tr>
+    <tr><td><code>!==</code></td><td>Ist ungleich?</td><td><code>3 !== 4</code> → true</td></tr>
+    <tr><td><code>&lt;</code> / <code>&gt;</code></td><td>Kleiner / größer?</td><td><code>2 &lt; 5</code> → true</td></tr>
+    <tr><td><code>&lt;=</code> / <code>&gt;=</code></td><td>Kleiner gleich / größer gleich?</td><td><code>5 &gt;= 5</code> → true</td></tr>
+  </table>
+
+  <p class="note warning">Ein = gibt einer Variable einen Wert. Drei === vergleichen. Das verwechselt jeder mal!</p>
+
+  <p>Es gibt auch <code>==</code> mit nur zwei Zeichen. Das ist aber tückisch, weil es Typen heimlich umwandelt: <code>"5" == 5</code> ist <code>true</code>. Nimm immer <code>===</code>.</p>
+
+  <js-console>
+    <code>10 &gt; 3</code>
+    <code>"Mia" === "mia"</code>
+    <code>"5" === 5</code>
+    <code>let age = 13</code>
+    <code>age &gt;= 12</code>
+  </js-console>
+
+  <h2>Und, oder, nicht</h2>
+  <p>Oft hängen Entscheidungen von mehreren Dingen ab. „Ich gehe raus, wenn es warm ist <em>und</em> nicht regnet.“</p>
+  <table>
+    <tr><th>Zeichen</th><th>Bedeutung</th><th>Wann true?</th></tr>
+    <tr><td><code>&amp;&amp;</code></td><td>und</td><td>wenn <strong>beide</strong> Seiten true sind</td></tr>
+    <tr><td><code>||</code></td><td>oder</td><td>wenn <strong>mindestens eine</strong> Seite true ist</td></tr>
+    <tr><td><code>!</code></td><td>nicht</td><td>dreht den Wert um: <code>!true</code> ist false</td></tr>
+  </table>
+  <p>Den senkrechten Strich <code>|</code> bekommst du auf der deutschen Tastatur mit <kbd>Alt Gr</kbd> + <kbd>&lt;</kbd> (am Mac <kbd>⌥</kbd> + <kbd>7</kbd>).</p>
+
+  <js-editor name="lesson-03-demo">
+    <textarea>
+const temperature = 24;
+const isRaining = false;
+
+const goOutside = temperature > 20 && !isRaining;
+console.log("Raus gehen?", goOutside);
+
+const isWeekend = true;
+const isHoliday = false;
+console.log("Ausschlafen?", isWeekend || isHoliday);
+</textarea>
+  </js-editor>
+
+  <section class="exercise">
+    <h3>Übung: Achterbahn</h3>
+    <p>Auf die Achterbahn darf, wer <strong>mindestens 12 Jahre</strong> alt <strong>und</strong> <strong>mindestens 140 cm</strong> groß ist. Berechne <code>canRide</code> aus <code>age</code> und <code>height</code> und gib es aus. Ich teste deine Lösung danach auch mit anderen Werten.</p>
+    <js-editor check="lesson-03-ride">
+      <textarea>
+const age = 13;
+const height = 150;
+
+const canRide = false; // ersetze false durch einen Vergleich
+
+console.log(canRide);
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>const canRide = age &gt;= 12 &amp;&amp; height &gt;= 140;</code></pre>
+    </details>
+  </section>
+
+  <section class="exercise">
+    <h3>Übung: Typen raten</h3>
+    <p>Welchen Typ haben diese Werte? Rate zuerst, dann prüfe mit <code>typeof</code> in der Konsole: <code>"true"</code>, <code>3.14</code>, <code>"" + 7</code>, <code>7 &gt; 3</code>.</p>
+    <js-console></js-console>
+  </section>
+</main>
+<script src="assets/course.js"></script>
+<script>
+  Course.check('lesson-03-ride', ({ run, replaceValue, logs }) => {
+    if (logs[logs.length - 1] !== 'true' && logs[logs.length - 1] !== 'false') {
+      return 'Gib am Ende canRide mit console.log aus. Es sollte true oder false sein.';
+    }
+    const cases = [
+      { age: 13, height: 150, expected: 'true' },
+      { age: 11, height: 150, expected: 'false' },
+      { age: 15, height: 130, expected: 'false' },
+      { age: 12, height: 140, expected: 'true' },
+      { age: 10, height: 120, expected: 'false' },
+    ];
+    for (const testCase of cases) {
+      const testCode = replaceValue('height', testCase.height, replaceValue('age', testCase.age));
+      if (!testCode) return 'Lass die Zeilen const age = … und const height = … bitte stehen.';
+      const result = run(testCode);
+      const answer = result.logs[result.logs.length - 1];
+      if (answer !== testCase.expected) {
+        return `Mit age = ${testCase.age} und height = ${testCase.height} kommt ${answer} raus, richtig wäre ${testCase.expected}. Denk an &&, >= und genau 12 bzw. 140.`;
+      }
+    }
+    return true;
+  });
+</script>
+</body>
+</html>

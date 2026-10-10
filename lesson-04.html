@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entscheidungen mit if · Code-Heft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/course.css">
+</head>
+<body>
+<main>
+  <p class="lesson-number">Lektion 4</p>
+  <h1>Entscheidungen mit if</h1>
+  <p class="lead">Bisher laufen deine Programme stur von oben nach unten. Jetzt lernen sie, auf Situationen zu reagieren: Wenn das Leben auf 0 fällt, ist das Spiel vorbei.</p>
+
+  <h2>Wenn … dann …</h2>
+  <pre><code>if (lives === 0) {
+  console.log("Game Over");
+}</code></pre>
+  <p>So liest man das: „<strong>Wenn</strong> (<code>if</code>) die Bedingung in den runden Klammern <code>true</code> ist, <strong>dann</strong> führe aus, was in den geschweiften Klammern <code>{ }</code> steht.“ Ist sie <code>false</code>, wird der Block einfach übersprungen.</p>
+  <p>Die geschweiften Klammern bekommst du mit <kbd>Alt Gr</kbd> + <kbd>7</kbd> und <kbd>0</kbd> (am Mac <kbd>⌥</kbd> + <kbd>8</kbd> und <kbd>9</kbd>).</p>
+
+  <h2>… sonst …</h2>
+  <p>Mit <code>else</code> sagst du, was passieren soll, wenn die Bedingung <em>nicht</em> stimmt. Mit <code>else if</code> kannst du beliebig viele Fälle nacheinander prüfen. Der erste passende gewinnt, der Rest wird übersprungen.</p>
+
+  <js-editor name="lesson-04-demo">
+    <textarea>
+const temperature = 18;
+
+if (temperature >= 25) {
+  console.log("Ab ins Freibad!");
+} else if (temperature >= 15) {
+  console.log("Perfekt für eine Radtour.");
+} else if (temperature >= 5) {
+  console.log("Jacke nicht vergessen.");
+} else {
+  console.log("Lieber drinnen bleiben und programmieren.");
+}
+</textarea>
+  </js-editor>
+
+  <p class="note">Ändere temperature auf 30, 10 und -2 und führe das Programm jedes Mal aus. Welche Zeile wird ausgegeben?</p>
+
+  <p>Der Code zwischen den <code>{ }</code> ist eingerückt, also mit zwei Leerzeichen nach rechts geschoben. Dem Computer ist das egal, aber Menschen sehen so sofort, was zusammengehört. Der Editor rückt automatisch ein, wenn du nach <code>{</code> <kbd>Enter</kbd> drückst.</p>
+
+  <h2>Mehrere Bedingungen</h2>
+  <p>Die Zeichen <code>&amp;&amp;</code> und <code>||</code> aus Lektion 3 funktionieren natürlich auch in <code>if</code>:</p>
+  <pre><code>if (hasTicket &amp;&amp; age &gt;= 16) {
+  console.log("Viel Spaß im Konzert!");
+}</code></pre>
+
+  <h2>Fragen stellen mit prompt</h2>
+  <p>Mit <code>prompt("Frage")</code> öffnet der Browser ein kleines Fenster, in das man etwas eintippen kann. Die Antwort ist immer ein Text.</p>
+
+  <js-editor name="lesson-04-password">
+    <textarea>
+const password = prompt("Wie lautet das Passwort?");
+
+if (password === "sesam") {
+  console.log("Tür geht auf. Willkommen!");
+} else {
+  console.log("Falsch. Die Tür bleibt zu.");
+}
+</textarea>
+  </js-editor>
+
+  <section class="exercise">
+    <h3>Übung: Notenrechner</h3>
+    <p>In einem Test gibt es maximal 100 Punkte. Gib je nach <code>points</code> genau eine dieser Zeilen aus:</p>
+    <ul>
+      <li>ab 90 Punkten: <code>sehr gut</code></li>
+      <li>ab 75 Punkten: <code>gut</code></li>
+      <li>ab 50 Punkten: <code>bestanden</code></li>
+      <li>darunter: <code>nicht bestanden</code></li>
+    </ul>
+    <p>Ich teste dein Programm mit vielen verschiedenen Punktzahlen.</p>
+    <js-editor check="lesson-04-grade">
+      <textarea>
+let points = 73;
+
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>let points = 73;
+
+if (points &gt;= 90) {
+  console.log("sehr gut");
+} else if (points &gt;= 75) {
+  console.log("gut");
+} else if (points &gt;= 50) {
+  console.log("bestanden");
+} else {
+  console.log("nicht bestanden");
+}</code></pre>
+      <p>Die Reihenfolge ist wichtig: Würdest du zuerst <code>points &gt;= 50</code> prüfen, bekäme auch jemand mit 95 Punkten nur „bestanden“.</p>
+    </details>
+  </section>
+
+  <section class="exercise">
+    <h3>Übung: Gerade oder ungerade?</h3>
+    <p>Gib für <code>number</code> aus, ob sie <code>gerade</code> oder <code>ungerade</code> ist. Tipp: Gerade Zahlen haben beim Teilen durch 2 keinen Rest. Erinnerst du dich an <code>%</code>?</p>
+    <js-editor check="lesson-04-even">
+      <textarea>
+const number = 7;
+
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>if (number % 2 === 0) {
+  console.log("gerade");
+} else {
+  console.log("ungerade");
+}</code></pre>
+    </details>
+  </section>
+</main>
+<script src="assets/course.js"></script>
+<script>
+  Course.check('lesson-04-grade', ({ run, replaceValue }) => {
+    const expectedFor = (points) =>
+      points >= 90 ? 'sehr gut' : points >= 75 ? 'gut' : points >= 50 ? 'bestanden' : 'nicht bestanden';
+    for (const points of [73, 100, 90, 89, 75, 74, 50, 49, 0]) {
+      const testCode = replaceValue('points', points);
+      if (!testCode) return 'Lass die Zeile let points = … bitte stehen.';
+      const { logs, error } = run(testCode);
+      if (error) return `Bei points = ${points} gibt es einen Fehler: ${error.message}`;
+      if (logs.length !== 1) return `Bei points = ${points} gibt es ${logs.length} Ausgaben. Es soll genau eine sein. Nutze else if.`;
+      if (logs[0] !== expectedFor(points)) {
+        return `Bei ${points} Punkten kommt „${logs[0]}“ raus, richtig wäre „${expectedFor(points)}“.`;
+      }
+    }
+    return true;
+  });
+
+  Course.check('lesson-04-even', ({ run, replaceValue }) => {
+    for (const number of [7, 4, 0, 13, 100]) {
+      const testCode = replaceValue('number', number);
+      if (!testCode) return 'Lass die Zeile const number = … bitte stehen.';
+      const { logs } = run(testCode);
+      const expected = number % 2 === 0 ? 'gerade' : 'ungerade';
+      if (logs[logs.length - 1] !== expected) {
+        return `Bei ${number} kommt „${logs[logs.length - 1] ?? 'nichts'}“ raus, richtig wäre „${expected}“.`;
+      }
+    }
+    return true;
+  });
+</script>
+</body>
+</html>

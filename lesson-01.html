@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Die Konsole · Code-Heft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/course.css">
+</head>
+<body>
+<main>
+  <p class="lesson-number">Lektion 1</p>
+  <h1>Die Konsole</h1>
+  <p class="lead">Die Konsole ist wie ein Chat mit dem Computer: Du schreibst einen Befehl, er antwortet sofort. Perfekt zum Ausprobieren.</p>
+
+  <h2>Rechnen</h2>
+  <p>JavaScript kann rechnen wie ein Taschenrechner. Die Zeichen sind fast die gleichen wie in Mathe:</p>
+  <table>
+    <tr><th>Zeichen</th><th>Bedeutung</th><th>Beispiel</th></tr>
+    <tr><td><code>+</code></td><td>plus</td><td><code>5 + 3</code> → 8</td></tr>
+    <tr><td><code>-</code></td><td>minus</td><td><code>10 - 4</code> → 6</td></tr>
+    <tr><td><code>*</code></td><td>mal</td><td><code>6 * 7</code> → 42</td></tr>
+    <tr><td><code>/</code></td><td>geteilt</td><td><code>20 / 4</code> → 5</td></tr>
+    <tr><td><code>%</code></td><td>Rest beim Teilen</td><td><code>10 % 3</code> → 1</td></tr>
+  </table>
+  <p>Punkt vor Strich gilt auch hier, und Klammern funktionieren wie gewohnt. <mark>Achtung:</mark> Kommazahlen schreibt man mit Punkt, also <code>2.5</code> statt <code>2,5</code>. Programmiersprachen kommen aus dem Englischen.</p>
+
+  <js-console>
+    <code>2 + 3 * 4</code>
+    <code>(2 + 3) * 4</code>
+    <code>2.5 * 2</code>
+    <code>17 % 5</code>
+  </js-console>
+
+  <h2>Texte</h2>
+  <p>Texte heißen beim Programmieren <mark>Strings</mark> (englisch für „Schnur“, eine Schnur aus Buchstaben). Damit JavaScript weiß, wo ein Text anfängt und aufhört, kommt er in Anführungszeichen:</p>
+  <pre><code>"Hallo"
+'Hallo'      // einfache Anführungszeichen gehen auch</code></pre>
+  <p>Mit <code>+</code> kannst du Texte aneinanderhängen. Probier auch mal aus, was passiert, wenn du die Anführungszeichen weglässt. Der Rotstift erklärt dir die Fehlermeldung.</p>
+
+  <js-console>
+    <code>"Pizza" + "brötchen"</code>
+    <code>"Ha" + "ha" + "ha"</code>
+    <code>"Hallo".length</code>
+    <code>Hallo</code>
+  </js-console>
+
+  <p class="note">.length zählt die Zeichen in einem Text. Leerzeichen zählen mit!</p>
+
+  <h2>Programme und console.log</h2>
+  <p>Die Konsole zeigt das Ergebnis jeder Zeile automatisch an. In einem richtigen <mark>Programm</mark> mit vielen Zeilen ist das anders: Dort zeigt der Computer nur, was du ausdrücklich ausgeben lässt. Dafür gibt es den Befehl <code>console.log(…)</code>.</p>
+  <p>Der Editor unten führt alle Zeilen nacheinander aus, von oben nach unten. Drück auf „Ausführen“.</p>
+
+  <js-editor name="lesson-01-demo">
+    <textarea>
+console.log("Ich bin ein Programm.");
+console.log("Ich zähle bis drei:");
+console.log(1);
+console.log(2);
+console.log(3);
+console.log("Fertig! 2 + 2 ist", 2 + 2);
+</textarea>
+  </js-editor>
+
+  <p>Am Ende jeder Zeile steht ein Semikolon <code>;</code>, wie ein Punkt am Satzende. JavaScript ist da nicht streng, aber es ist guter Stil.</p>
+
+  <h2>Kommentare</h2>
+  <p>Alles hinter <code>//</code> ignoriert der Computer. So kannst du Notizen für dich (oder andere Menschen) in den Code schreiben.</p>
+  <pre><code>// Das hier ist ein Kommentar
+console.log("Das wird ausgeführt"); // ab hier wieder Kommentar</code></pre>
+
+  <section class="exercise">
+    <h3>Übung: Stell dich vor</h3>
+    <p>Gib mit <code>console.log</code> einen Satz aus, der mit <code>Hallo</code> anfängt, zum Beispiel <code>Hallo, ich bin Sam!</code></p>
+    <js-editor check="lesson-01-hello" success="Hallo zurück! Dein erstes Programm läuft.">
+      <textarea>
+// Schreib hier deinen Code:
+
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>console.log("Hallo, ich bin Sam!");</code></pre>
+    </details>
+  </section>
+
+  <section class="exercise">
+    <h3>Übung: Sekunden pro Tag</h3>
+    <p>Wie viele Sekunden hat ein Tag? Lass JavaScript rechnen: 60 Sekunden mal 60 Minuten mal 24 Stunden. Gib das Ergebnis mit <code>console.log</code> aus. Nicht im Kopf ausrechnen, schreib die Rechnung in den Code!</p>
+    <js-editor check="lesson-01-seconds">
+      <textarea>
+console.log( /* deine Rechnung */ );
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>console.log(60 * 60 * 24);</code></pre>
+    </details>
+  </section>
+
+  <section class="exercise">
+    <h3>Bonus: Wie alt bist du in Sekunden?</h3>
+    <p>Rechne ungefähr aus, wie viele Sekunden du schon lebst. Ein Jahr hat 365 Tage. Diese Übung wird nicht geprüft, sie ist nur für dich.</p>
+    <js-editor name="lesson-01-bonus">
+      <textarea>
+// Tipp: Sekunden pro Tag * 365 * dein Alter
+</textarea>
+    </js-editor>
+  </section>
+
+  <p class="note">Profi-Trick: Jeder Browser hat eine eingebaute Konsole. Drück auf einer beliebigen Webseite F12 (am Mac ⌘ + ⌥ + I) und wähle „Konsole“. Alles aus dieser Lektion funktioniert dort genauso.</p>
+</main>
+<script src="assets/course.js"></script>
+<script>
+  Course.check('lesson-01-hello', ({ logs }) => {
+    if (!logs.length) return 'Ich sehe keine Ausgabe. Hast du console.log("…") geschrieben?';
+    if (!logs.some((line) => line.trim().startsWith('Hallo'))) {
+      return 'Fast! Der Satz soll mit „Hallo“ anfangen (großes H).';
+    }
+    return true;
+  });
+
+  Course.check('lesson-01-seconds', ({ logs, code }) => {
+    if (!logs.includes('86400')) return 'Das Ergebnis sollte 86400 sein. Hast du 60 * 60 * 24 ausgegeben?';
+    if (!code.includes('*')) return 'Richtige Zahl, aber lass JavaScript rechnen: Schreib die Rechnung mit * in den Code.';
+    return true;
+  });
+</script>
+</body>
+</html>

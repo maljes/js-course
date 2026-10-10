@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Variablen · Code-Heft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/course.css">
+</head>
+<body>
+<main>
+  <p class="lesson-number">Lektion 2</p>
+  <h1>Variablen</h1>
+  <p class="lead">Ein Spiel muss sich merken, wie viele Punkte du hast. Eine App merkt sich deinen Namen. Dafür gibt es Variablen.</p>
+
+  <h2>Eine Kiste mit Etikett</h2>
+  <p>Stell dir eine <mark>Variable</mark> wie eine Kiste vor, auf der ein Name steht. In die Kiste legst du einen Wert. Später kannst du über den Namen wieder an den Wert kommen.</p>
+  <pre><code>let score = 0;
+let playerName = "Mia";</code></pre>
+  <p>Das liest man so: „Erstelle (<code>let</code>) eine Kiste namens <code>score</code> und lege <code>0</code> hinein.“ Das <code>=</code> heißt hier nicht „ist gleich“ wie in Mathe, sondern <mark>„bekommt den Wert“</mark>.</p>
+
+  <js-console>
+    <code>let score = 0</code>
+    <code>score</code>
+    <code>score = score + 10</code>
+    <code>score + 5</code>
+  </js-console>
+
+  <p class="note">Merke: let nur beim ersten Mal! Danach benutzt du einfach den Namen. Wenn du let zweimal für denselben Namen schreibst, meckert JavaScript, probier es ruhig aus.</p>
+
+  <h2>Werte verändern</h2>
+  <p>Weil Punkte ständig hoch- und runtergehen, gibt es Abkürzungen:</p>
+  <table>
+    <tr><th>Lang</th><th>Kurz</th></tr>
+    <tr><td><code>score = score + 10</code></td><td><code>score += 10</code></td></tr>
+    <tr><td><code>score = score - 5</code></td><td><code>score -= 5</code></td></tr>
+    <tr><td><code>score = score + 1</code></td><td><code>score++</code></td></tr>
+  </table>
+
+  <h2>let oder const?</h2>
+  <p>Manche Werte ändern sich nie, zum Beispiel die Anzahl der Tage pro Woche. Dafür nimmst du <code>const</code> (von englisch <em>constant</em>, unveränderlich):</p>
+  <pre><code>const daysPerWeek = 7;
+daysPerWeek = 8;   // Fehler! const kann man nicht ändern.</code></pre>
+  <p>Faustregel: Nimm <code>const</code>, wenn sich der Wert nicht ändern soll, sonst <code>let</code>.</p>
+
+  <h2>Gute Namen</h2>
+  <ul>
+    <li>Keine Leerzeichen. Mehrere Wörter schreibt man zusammen, jedes neue Wort groß: <code>highScore</code>, <code>playerName</code>. Das heißt <mark>camelCase</mark>, weil die Großbuchstaben wie Kamelhöcker aussehen.</li>
+    <li>Groß- und Kleinschreibung zählt: <code>score</code> und <code>Score</code> sind zwei verschiedene Kisten.</li>
+    <li>Der Name soll sagen, was drin ist. <code>lives</code> ist besser als <code>x</code>.</li>
+    <li>Profis schreiben Namen im Code auf Englisch, damit Menschen auf der ganzen Welt ihn verstehen. Das machen wir hier auch. Texte, die der Nutzer sieht, bleiben natürlich deutsch.</li>
+  </ul>
+
+  <h2>Texte zusammenbauen</h2>
+  <p>Variablen kannst du mit Text verbinden. Es gibt zwei Wege:</p>
+  <pre><code>const name = "Mia";
+const age = 13;
+
+// 1. Mit +
+console.log("Ich heiße " + name + " und bin " + age + " Jahre alt.");
+
+// 2. Mit Backticks ` und ${…} – übersichtlicher!
+console.log(`Ich heiße ${name} und bin ${age} Jahre alt.`);</code></pre>
+  <p>Die Backticks <code>`</code> findest du auf der deutschen Tastatur rechts neben dem ß (mit <kbd>Shift</kbd>, danach Leertaste). Alles in <code>${…}</code> wird durch den Wert ersetzt. Das nennt man <mark>Template-String</mark>.</p>
+
+  <js-editor name="lesson-02-demo">
+    <textarea>
+const name = "Mia";
+let lives = 3;
+
+console.log(`${name} startet mit ${lives} Leben.`);
+lives--;
+console.log(`Autsch! Noch ${lives} Leben übrig.`);
+</textarea>
+  </js-editor>
+
+  <section class="exercise">
+    <h3>Übung: Steckbrief</h3>
+    <p>Erstelle eine Variable <code>name</code> mit deinem Namen (Text) und eine Variable <code>age</code> mit deinem Alter (Zahl, ohne Anführungszeichen). Gib dann einen Satz aus, in dem beide vorkommen.</p>
+    <js-editor check="lesson-02-profile">
+      <textarea>
+// Deine Variablen:
+
+
+// Deine Ausgabe:
+
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>const name = "Sam";
+const age = 14;
+console.log(`Ich heiße ${name} und bin ${age} Jahre alt.`);</code></pre>
+    </details>
+  </section>
+
+  <section class="exercise">
+    <h3>Übung: Punktestand</h3>
+    <p>Ein Spieler sammelt dreimal 10 Punkte und verliert dann 5 Punkte. Ändere <code>score</code> Schritt für Schritt (nicht einfach 25 hinschreiben!) und gib am Ende den Punktestand aus.</p>
+    <js-editor check="lesson-02-score">
+      <textarea>
+let score = 0;
+
+// Hier dreimal 10 Punkte dazu und dann 5 abziehen
+
+
+console.log(score);
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>let score = 0;
+score += 10;
+score += 10;
+score += 10;
+score -= 5;
+console.log(score);</code></pre>
+    </details>
+  </section>
+</main>
+<script src="assets/course.js"></script>
+<script>
+  Course.check('lesson-02-profile', ({ type, value, output }) => {
+    // window.name always exists as "", so an empty value means the learner did not declare it.
+    if (type('name') !== 'string' || value('name') === '') return 'Es gibt noch keine Variable name mit einem Text. Denk an die Anführungszeichen.';
+    if (type('age') !== 'number') return 'age soll eine Zahl sein, also ohne Anführungszeichen: const age = 14;';
+    if (!output.includes(value('name'))) return 'Dein Name taucht in der Ausgabe nicht auf.';
+    if (!output.includes(String(value('age')))) return 'Dein Alter taucht in der Ausgabe nicht auf.';
+    return true;
+  });
+
+  Course.check('lesson-02-score', ({ value, logs, code }) => {
+    if (value('score') !== 25) return `score ist am Ende ${value('score')}, sollte aber 25 sein.`;
+    if (/score\s*=\s*25\b/.test(code)) return 'Schummeln gilt nicht 😉 Ändere score mit += und -=.';
+    if (logs[logs.length - 1] !== '25') return 'Gib den Punktestand am Ende mit console.log(score) aus.';
+    return true;
+  });
+</script>
+</body>
+</html>
