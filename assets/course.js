@@ -18,6 +18,8 @@
     { file: 'lesson-09.html', title: 'HTML-Grundlagen' },
     { file: 'lesson-10.html', title: 'JavaScript trifft HTML' },
     { file: 'lesson-11.html', title: 'Projekt: Zahlenraten' },
+    { file: 'lesson-12.html', title: 'Projekt: Schere, Stein, Papier' },
+    { file: 'lesson-13.html', title: 'Projekt: Quiz' },
   ];
 
   const MAX_LOOP_ITERATIONS = 5000000;

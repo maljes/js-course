@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Projekt: Quiz · Code-Heft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/course.css">
+</head>
+<body>
+<main>
+  <p class="lesson-number">Lektion 13</p>
+  <h1>Projekt: Quiz</h1>
+  <p class="lead">Ein Quiz mit mehreren Fragen, Antwort-Buttons und einer Auswertung am Ende. Und weil du schon so viel gelernt hast, geht es in den Fragen um JavaScript selbst.</p>
+
+  <h2>Der Plan</h2>
+  <ol>
+    <li>Die Fragen als Daten speichern: ein Array aus Objekten.</li>
+    <li>Eine Frage anzeigen und für jede Antwort einen Button erzeugen.</li>
+    <li>Beim Klick prüfen, ob die Antwort stimmt, und das farbig zeigen.</li>
+    <li>Mit „Weiter“ zur nächsten Frage.</li>
+    <li>Am Ende die Punktzahl und eine passende Nachricht zeigen.</li>
+  </ol>
+  <p>Das Spannende an diesem Projekt: Die Buttons stehen nicht fest im HTML. Jede Frage hat andere Antworten, also muss JavaScript die Buttons selbst bauen.</p>
+
+  <h2>Fragen als Daten</h2>
+  <p>Jede Frage ist ein Objekt mit drei Eigenschaften: dem Fragetext, einem Array mit Antworten und dem Index der richtigen Antwort. Alle Fragen zusammen stecken in einem Array.</p>
+  <pre><code>const questions = [
+  {
+    question: "Welches Zeichen vergleicht zwei Werte?",
+    answers: ["=", "===", "=&gt;"],
+    correct: 1,
+  },
+  {
+    question: "Wie heißt die Liste in JavaScript?",
+    answers: ["Array", "Objekt", "String"],
+    correct: 0,
+  },
+];</code></pre>
+  <p><code>correct: 1</code> heißt: Die zweite Antwort ist richtig, denn gezählt wird ab 0. Probier in der Konsole, wie du an die einzelnen Teile kommst:</p>
+  <js-console>
+    <code>const questions = [{ question: "Welches Zeichen vergleicht?", answers: ["=", "===", "=&gt;"], correct: 1 }]</code>
+    <code>questions[0].question</code>
+    <code>questions[0].answers</code>
+    <code>questions[0].answers[questions[0].correct]</code>
+  </js-console>
+  <p class="note">Der große Vorteil: Wenn du eine neue Frage willst, fügst du nur ein Objekt hinzu. Am restlichen Code musst du nichts ändern.</p>
+
+  <section class="exercise">
+    <h3>Übung: Die Auswertung</h3>
+    <p>Schreib <code>resultMessage(score, total)</code>. Sie gibt je nach Ergebnis einen dieser Texte zurück:</p>
+    <ul>
+      <li>alles richtig: <code>Perfekt! 🏆</code></li>
+      <li>mindestens die Hälfte richtig: <code>Gut gemacht! 👍</code></li>
+      <li>weniger als die Hälfte: <code>Da geht noch was! 💪</code></li>
+    </ul>
+    <js-editor check="lesson-13-message">
+      <textarea>
+function resultMessage(score, total) {
+
+}
+
+console.log(resultMessage(5, 5)); // Perfekt! 🏆
+console.log(resultMessage(3, 5)); // Gut gemacht! 👍
+console.log(resultMessage(1, 5)); // Da geht noch was! 💪
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>function resultMessage(score, total) {
+  if (score === total) {
+    return "Perfekt! 🏆";
+  } else if (score &gt;= total / 2) {
+    return "Gut gemacht! 👍";
+  }
+  return "Da geht noch was! 💪";
+}</code></pre>
+    </details>
+  </section>
+
+  <h2>Elemente mit JavaScript erzeugen</h2>
+  <p>Bisher hast du nur Elemente verändert, die schon im HTML standen. Mit <code>document.createElement</code> baust du neue. Das passiert in drei Schritten:</p>
+  <ol>
+    <li>Element erzeugen: <code>const item = document.createElement("li");</code></li>
+    <li>Einrichten, zum Beispiel den Text setzen: <code>item.textContent = "Neu!";</code></li>
+    <li>In die Seite einhängen: <code>list.append(item);</code></li>
+  </ol>
+  <p>Erst mit Schritt 3 wird das Element sichtbar. Vorher existiert es nur im Speicher. Hier baut eine Schleife aus einem Array eine ganze Liste:</p>
+  <html-playground name="lesson-13-create" height="220" editor-height="240">
+    <textarea data-lang="html">
+<h2>Meine Lieblingsessen</h2>
+<ul id="list"></ul>
+<button id="clear">Liste leeren</button>
+</textarea>
+    <textarea data-lang="css">
+body {
+  font-family: sans-serif;
+  padding: 16px;
+}
+</textarea>
+    <textarea data-lang="js">
+const foods = ["Pizza", "Sushi", "Pfannkuchen", "Döner"];
+const list = document.querySelector("#list");
+
+for (const food of foods) {
+  const item = document.createElement("li");
+  item.textContent = food;
+  list.append(item);
+}
+
+document.querySelector("#clear").addEventListener("click", () => {
+  // Ein leerer Text entfernt alles, was im Element steckt
+  list.textContent = "";
+});
+</textarea>
+  </html-playground>
+  <p>Füg im JS-Feld ein Essen zum Array hinzu. Die Liste wird automatisch länger. Mit <code>list.textContent = ""</code> wird ein Element komplett geleert. Das brauchst du gleich, um die Antworten der alten Frage zu entfernen.</p>
+
+  <section class="exercise">
+    <h3>Übung: Antwort-Button bauen</h3>
+    <p>Schreib <code>createAnswerButton(text)</code>. Sie erzeugt einen <code>button</code>, setzt den Text und gibt den Button zurück. Einhängen musst du ihn noch nicht.</p>
+    <js-editor check="lesson-13-button">
+      <textarea>
+function createAnswerButton(text) {
+
+}
+
+const button = createAnswerButton("Array");
+console.log(button, button.textContent);
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>function createAnswerButton(text) {
+  const button = document.createElement("button");
+  button.textContent = text;
+  return button;
+}</code></pre>
+    </details>
+  </section>
+
+  <h2>Das Quiz bauen</h2>
+  <p>Ein neuer Trick für dieses Projekt: Die Funktion <code>showQuestion</code> baut den kompletten Bereich der Frage jedes Mal neu auf, und zwar anhand von <code>currentIndex</code>, der Nummer der aktuellen Frage. Willst du zur nächsten Frage, erhöhst du einfach <code>currentIndex</code> und rufst <code>showQuestion()</code> erneut auf.</p>
+  <p>Beim Prüfen helfen dir zwei Dinge:</p>
+  <ul>
+    <li><code>button.disabled = true</code> macht einen Button unklickbar, damit man nicht zweimal antworten kann.</li>
+    <li><code>button.classList.add("correct")</code> bzw. <code>"wrong"</code> färbt ihn grün oder rot. Die CSS-Regeln dafür sind schon da.</li>
+  </ul>
+
+  <html-playground name="lesson-13-game" label="Quiz" height="400" editor-height="420" file-name="quiz">
+    <textarea data-lang="html">
+<p id="progress"></p>
+<h1 id="question"></h1>
+<div id="answers"></div>
+<button id="next">Weiter</button>
+<button id="restart">Nochmal spielen</button>
+</textarea>
+    <textarea data-lang="css">
+body {
+  font-family: system-ui, sans-serif;
+  background: #f0f4ff;
+  color: #1b2030;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+#progress {
+  color: #586174;
+  margin: 0;
+}
+
+h1 {
+  font-size: 26px;
+  color: #1d3a9e;
+}
+
+#answers {
+  display: grid;
+  gap: 10px;
+}
+
+#answers button {
+  font-size: 18px;
+  text-align: left;
+  padding: 12px 16px;
+  border: 2px solid #1d3a9e;
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+}
+
+#answers button:hover:not(:disabled) {
+  background: #e3e9ff;
+}
+
+#answers button.correct {
+  background: #2ea05f;
+  border-color: #2ea05f;
+  color: white;
+}
+
+#answers button.wrong {
+  background: #d0313b;
+  border-color: #d0313b;
+  color: white;
+}
+
+#next, #restart {
+  display: none;
+  margin-top: 16px;
+  font-size: 18px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #ffe45c;
+  font-weight: bold;
+  cursor: pointer;
+}
+</textarea>
+    <textarea data-lang="js">
+const progressDisplay = document.querySelector("#progress");
+const questionDisplay = document.querySelector("#question");
+const answersBox = document.querySelector("#answers");
+const nextButton = document.querySelector("#next");
+const restartButton = document.querySelector("#restart");
+
+const questions = [
+  {
+    question: "Mit welchem Index beginnt ein Array?",
+    answers: ["1", "0", "-1"],
+    correct: 1,
+  },
+  {
+    question: "Welches Zeichen vergleicht zwei Werte?",
+    answers: ["=", "=>", "==="],
+    correct: 2,
+  },
+  {
+    question: 'Was ergibt "5" + 3?',
+    answers: ["8", '"53"', "Einen Fehler"],
+    correct: 1,
+  },
+  {
+    question: "Welche Schleife läuft, solange eine Bedingung true ist?",
+    answers: ["while", "if", "return"],
+    correct: 0,
+  },
+  {
+    question: "Wie gibt eine Funktion ein Ergebnis zurück?",
+    answers: ["console.log", "return", "let"],
+    correct: 1,
+  },
+];
+
+let currentIndex = 0;
+let score = 0;
+
+// Schritt 1: Füg hier deine Funktionen resultMessage und createAnswerButton ein
+
+
+function showQuestion() {
+  const current = questions[currentIndex];
+
+  // Schritt 2: Zeig in progressDisplay "Frage 1 von 5" an
+  // und in questionDisplay den Fragetext
+
+  // Schritt 3: Leere answersBox und versteck nextButton
+
+  // Schritt 4: Erzeuge für jede Antwort einen Button mit createAnswerButton.
+  // Tipp: Nimm eine for-Schleife mit Index i, dann weißt du beim Klick,
+  // welche Antwort gewählt wurde: checkAnswer(i, button)
+
+}
+
+function checkAnswer(index, button) {
+  // Schritt 5: Mach alle Antwort-Buttons unklickbar
+  // (answersBox.querySelectorAll("button") liefert alle)
+
+  // Schritt 6: Ist index gleich questions[currentIndex].correct?
+  // Dann score erhöhen und button grün färben, sonst rot.
+
+  // Schritt 7: Zeig nextButton an (style.display = "inline-block")
+
+}
+
+// Schritt 8: Beim Klick auf nextButton: currentIndex erhöhen.
+// Gibt es noch Fragen, showQuestion() aufrufen,
+// sonst das Ergebnis mit resultMessage anzeigen und restartButton zeigen.
+
+showQuestion();
+</textarea>
+  </html-playground>
+
+  <details class="solution"><summary>Komplette Lösung (JS ohne die Fragen) anzeigen</summary>
+    <pre><code>let currentIndex = 0;
+let score = 0;
+
+function resultMessage(score, total) {
+  if (score === total) {
+    return "Perfekt! 🏆";
+  } else if (score &gt;= total / 2) {
+    return "Gut gemacht! 👍";
+  }
+  return "Da geht noch was! 💪";
+}
+
+function createAnswerButton(text) {
+  const button = document.createElement("button");
+  button.textContent = text;
+  return button;
+}
+
+function showQuestion() {
+  const current = questions[currentIndex];
+  progressDisplay.textContent = `Frage ${currentIndex + 1} von ${questions.length}`;
+  questionDisplay.textContent = current.question;
+
+  answersBox.textContent = "";
+  nextButton.style.display = "none";
+
+  for (let i = 0; i &lt; current.answers.length; i++) {
+    const button = createAnswerButton(current.answers[i]);
+    button.addEventListener("click", () =&gt; {
+      checkAnswer(i, button);
+    });
+    answersBox.append(button);
+  }
+}
+
+function checkAnswer(index, button) {
+  for (const answerButton of answersBox.querySelectorAll("button")) {
+    answerButton.disabled = true;
+  }
+
+  if (index === questions[currentIndex].correct) {
+    score++;
+    button.classList.add("correct");
+  } else {
+    button.classList.add("wrong");
+  }
+
+  nextButton.style.display = "inline-block";
+}
+
+nextButton.addEventListener("click", () =&gt; {
+  currentIndex++;
+  if (currentIndex &lt; questions.length) {
+    showQuestion();
+  } else {
+    progressDisplay.textContent = `${score} von ${questions.length} richtig`;
+    questionDisplay.textContent = resultMessage(score, questions.length);
+    answersBox.textContent = "";
+    nextButton.style.display = "none";
+    restartButton.style.display = "inline-block";
+  }
+});
+
+restartButton.addEventListener("click", () =&gt; {
+  currentIndex = 0;
+  score = 0;
+  restartButton.style.display = "none";
+  showQuestion();
+});
+
+showQuestion();</code></pre>
+  </details>
+
+  <h2>Mach es zu deinem Quiz</h2>
+  <ul>
+    <li>Schreib eigene Fragen: über dein Lieblingsspiel, deine Schule oder deine Freunde. Schick die gespeicherte Datei an jemanden und lass sie oder ihn raten.</li>
+    <li>Wenn die Antwort falsch war, färbe zusätzlich die richtige Antwort grün. Tipp: <code>answersBox.querySelectorAll("button")[correct]</code>.</li>
+    <li>Zeig während des Spiels den Punktestand an.</li>
+    <li>Eine Zeitbegrenzung pro Frage. Dafür brauchst du <code>setTimeout</code> oder <code>setInterval</code>. Schlag sie auf MDN nach!</li>
+  </ul>
+
+  <h2>Wie geht es weiter?</h2>
+  <p>Du hast jetzt die Grundbausteine fast jeder Programmiersprache kennengelernt: Variablen, Bedingungen, Schleifen, Funktionen, Listen und Objekte. Dazu kommt, wie man damit Webseiten steuert. Damit kannst du schon erstaunlich viel bauen. Ein paar Ideen für die nächsten Projekte:</p>
+  <ul>
+    <li><strong>To-do-Liste</strong>, bei der man Einträge hinzufügen und abhaken kann. Mit <code>createElement</code> bist du schon fast fertig.</li>
+    <li><strong>Reaktionstest</strong>: Wie schnell klickst du, wenn der Bildschirm grün wird? <code>Date.now()</code> liefert die aktuelle Zeit in Millisekunden.</li>
+    <li><strong>Galgenmännchen</strong>: Ein Wort erraten, Buchstabe für Buchstabe.</li>
+    <li><strong>Highscore, der bleibt</strong>: Mit <code>localStorage.setItem</code> merkt sich der Browser Werte auch nach dem Neuladen. So speichert übrigens auch dieses Heft deinen Fortschritt.</li>
+  </ul>
+  <p>Zum Nachschlagen ist das <a href="https://developer.mozilla.org/de/docs/Web/JavaScript">MDN Web Docs</a> die beste Quelle. Das benutzen auch Profis jeden Tag.</p>
+
+  <p class="note">Du bist jetzt offiziell Programmierer:in. Ganz ehrlich: Der wichtigste Skill ist nicht, alles auswendig zu wissen, sondern nicht aufzugeben, wenn etwas nicht klappt. Den hast du jetzt dreizehn Lektionen lang trainiert.</p>
+</main>
+<script src="assets/course.js"></script>
+<script>
+  Course.check('lesson-13-message', ({ value }) => {
+    const resultMessage = value('resultMessage');
+    if (typeof resultMessage !== 'function') return 'Ich finde keine Funktion namens resultMessage.';
+    const PERFECT = 'Perfekt! 🏆';
+    const GOOD = 'Gut gemacht! 👍';
+    const TRY_AGAIN = 'Da geht noch was! 💪';
+    const cases = [[5, 5, PERFECT], [3, 5, GOOD], [1, 5, TRY_AGAIN], [2, 4, GOOD], [1, 4, TRY_AGAIN], [0, 3, TRY_AGAIN], [10, 10, PERFECT], [5, 10, GOOD]];
+    for (const [score, total, expected] of cases) {
+      const actual = resultMessage(score, total);
+      if (actual === undefined) return `resultMessage(${score}, ${total}) gibt nichts zurück. Hast du return vergessen?`;
+      if (actual !== expected) return `resultMessage(${score}, ${total}) ergibt „${actual}“, richtig wäre „${expected}“.`;
+    }
+    return true;
+  });
+
+  Course.check('lesson-13-button', ({ value }) => {
+    const createAnswerButton = value('createAnswerButton');
+    if (typeof createAnswerButton !== 'function') return 'Ich finde keine Funktion namens createAnswerButton.';
+    for (const text of ['Array', 'while', '42']) {
+      const button = createAnswerButton(text);
+      if (button === undefined) return 'createAnswerButton gibt nichts zurück. Hast du return vergessen?';
+      if (!button || button.nodeType !== 1) return 'createAnswerButton soll ein Element zurückgeben, das du mit document.createElement erzeugt hast.';
+      if (button.tagName !== 'BUTTON') return `Du hast ein <${button.tagName.toLowerCase()}> erzeugt. Es soll ein "button" sein.`;
+      if (button.textContent !== text) return `createAnswerButton("${text}") hat den Text „${button.textContent}“. Setze textContent auf den Parameter.`;
+    }
+    return true;
+  });
+</script>
+</body>
+</html>

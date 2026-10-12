@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Projekt: Schere, Stein, Papier · Code-Heft</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/course.css">
+</head>
+<body>
+<main>
+  <p class="lesson-number">Lektion 12</p>
+  <h1>Projekt: Schere, Stein, Papier</h1>
+  <p class="lead">Du gegen den Computer. Schere schneidet Papier, Papier wickelt Stein ein, Stein macht die Schere stumpf. Wer gewinnt öfter?</p>
+
+  <h2>Der Plan</h2>
+  <ol>
+    <li>Der Computer wählt zufällig Schere, Stein oder Papier.</li>
+    <li>Eine Funktion entscheidet, wer gewonnen hat.</li>
+    <li>Drei Buttons, einer pro Wahl.</li>
+    <li>Nach jeder Runde: beide Wahlen anzeigen, Sieger nennen, Punktestand erhöhen.</li>
+  </ol>
+  <p>Diesmal baust du zuerst die <mark>Logik</mark>, also die Regeln des Spiels, ganz ohne HTML. Erst wenn sie stimmt, kommt die Oberfläche dazu. So machen es auch Profis: Logik lässt sich viel leichter testen als Buttons.</p>
+
+  <h2>Zufällig aus einer Liste wählen</h2>
+  <p>In Lektion 11 hast du eine Zufallszahl erzeugt. Damit kannst du auch einen zufälligen Eintrag aus einem Array holen: Du erzeugst einen zufälligen <em>Index</em> von 0 bis <code>length - 1</code>.</p>
+  <js-console>
+    <code>const snacks = ["Chips", "Apfel", "Popcorn", "Gummibärchen"]</code>
+    <code>Math.floor(Math.random() * snacks.length)</code>
+    <code>snacks[Math.floor(Math.random() * snacks.length)]</code>
+  </js-console>
+  <p>Weil <code>Math.floor(Math.random() * 4)</code> nur 0, 1, 2 oder 3 ergibt, passt der Index immer. Und das Schöne: Wenn du einen Snack hinzufügst, funktioniert der Code ohne Änderung weiter.</p>
+
+  <p>Im Code verwenden wir englische Bezeichnungen: <code>"rock"</code> (Stein), <code>"paper"</code> (Papier) und <code>"scissors"</code> (Schere). Was der Spieler sieht, bleibt natürlich deutsch. Dazu gleich mehr.</p>
+
+  <section class="exercise">
+    <h3>Übung: Der Computer wählt</h3>
+    <p>Schreib <code>randomChoice()</code>, die zufällig <code>"rock"</code>, <code>"paper"</code> oder <code>"scissors"</code> zurückgibt. Benutze das Array <code>choices</code>.</p>
+    <js-editor check="lesson-12-random">
+      <textarea>
+const choices = ["rock", "paper", "scissors"];
+
+function randomChoice() {
+
+}
+
+console.log(randomChoice(), randomChoice(), randomChoice());
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>function randomChoice() {
+  const index = Math.floor(Math.random() * choices.length);
+  return choices[index];
+}</code></pre>
+    </details>
+  </section>
+
+  <h2>Wer gewinnt?</h2>
+  <p>Das ist das Herzstück. Es gibt drei mögliche Ergebnisse: Unentschieden, der Spieler gewinnt, oder der Computer gewinnt. Statt alle neun Kombinationen einzeln aufzuschreiben, kannst du clever vorgehen:</p>
+  <ol>
+    <li>Sind beide Wahlen gleich? Dann unentschieden.</li>
+    <li>Gehört die Kombination zu den drei Fällen, in denen der Spieler gewinnt? Dann Spieler.</li>
+    <li>Sonst hat der Computer gewonnen.</li>
+  </ol>
+
+  <section class="exercise">
+    <h3>Übung: Der Schiedsrichter</h3>
+    <p>Schreib <code>getWinner(player, computer)</code>. Sie gibt <code>"draw"</code> (unentschieden), <code>"player"</code> oder <code>"computer"</code> zurück. Ich teste alle neun Kombinationen.</p>
+    <js-editor check="lesson-12-winner">
+      <textarea>
+function getWinner(player, computer) {
+
+}
+
+console.log(getWinner("rock", "scissors")); // soll "player" sein
+console.log(getWinner("rock", "paper"));    // soll "computer" sein
+console.log(getWinner("paper", "paper"));   // soll "draw" sein
+</textarea>
+    </js-editor>
+    <details class="solution"><summary>Tipp anzeigen</summary>
+      <p>Der Spieler gewinnt in genau diesen drei Fällen. Verbinde sie mit <code>||</code>:</p>
+      <ul>
+        <li><code>player === "rock" &amp;&amp; computer === "scissors"</code></li>
+        <li><code>player === "paper" &amp;&amp; computer === "rock"</code></li>
+        <li><code>player === "scissors" &amp;&amp; computer === "paper"</code></li>
+      </ul>
+    </details>
+    <details class="solution"><summary>Lösung anzeigen</summary>
+      <pre><code>function getWinner(player, computer) {
+  if (player === computer) {
+    return "draw";
+  }
+  if (
+    (player === "rock" &amp;&amp; computer === "scissors") ||
+    (player === "paper" &amp;&amp; computer === "rock") ||
+    (player === "scissors" &amp;&amp; computer === "paper")
+  ) {
+    return "player";
+  }
+  return "computer";
+}</code></pre>
+    </details>
+  </section>
+
+  <h2>Ein Objekt als Übersetzer</h2>
+  <p>Der Spieler soll natürlich nicht „scissors“ lesen, sondern „Schere ✌️“. Dafür eignet sich ein Objekt wie ein Wörterbuch: Die Eigenschaften sind die englischen Namen, die Werte das, was angezeigt wird.</p>
+  <pre><code>const labels = {
+  rock: "Stein ✊",
+  paper: "Papier ✋",
+  scissors: "Schere ✌️",
+};
+
+const choice = "paper";
+console.log(labels[choice]); // "Papier ✋"</code></pre>
+  <p>Neu ist die Schreibweise mit eckigen Klammern: <code>labels[choice]</code>. Sie brauchst du, wenn der Name der Eigenschaft in einer Variable steckt. <code>labels.choice</code> würde nach einer Eigenschaft suchen, die wörtlich „choice“ heißt, und die gibt es nicht.</p>
+
+  <h2>Mehrere Buttons, ein Code</h2>
+  <p>Für drei Buttons dreimal fast denselben Code zu schreiben, wäre mühsam. Besser: Jeder Button bekommt ein <mark>data-Attribut</mark> mit seiner Wahl. Mit <code>document.querySelectorAll</code> holst du dir alle auf einmal und gibst ihnen in einer Schleife denselben Klick-Code:</p>
+  <pre><code>&lt;button data-choice="rock"&gt;Stein ✊&lt;/button&gt;
+&lt;button data-choice="paper"&gt;Papier ✋&lt;/button&gt;</code></pre>
+  <pre><code>const buttons = document.querySelectorAll("[data-choice]");
+
+for (const button of buttons) {
+  button.addEventListener("click", () =&gt; {
+    console.log(button.dataset.choice); // "rock" oder "paper"
+  });
+}</code></pre>
+  <p>Aus <code>data-choice</code> im HTML wird in JavaScript <code>button.dataset.choice</code>. Probier es in der Spielwiese aus und schau dir die Konsole an.</p>
+
+  <h2>Das Spiel bauen</h2>
+  <p>HTML und CSS sind fertig. Kopier deine beiden Funktionen von oben ins JS-Feld und füll dann die Lücken.</p>
+
+  <html-playground name="lesson-12-game" label="Schere, Stein, Papier" height="380" editor-height="400" file-name="schere-stein-papier">
+    <textarea data-lang="html">
+<h1>Schere, Stein, Papier</h1>
+
+<div class="choices">
+  <button data-choice="rock">✊<span>Stein</span></button>
+  <button data-choice="paper">✋<span>Papier</span></button>
+  <button data-choice="scissors">✌️<span>Schere</span></button>
+</div>
+
+<p id="round">Wähl deine Waffe!</p>
+<p id="result"></p>
+<p id="score">Du 0 : 0 Computer</p>
+</textarea>
+    <textarea data-lang="css">
+body {
+  font-family: system-ui, sans-serif;
+  background: #18233c;
+  color: white;
+  text-align: center;
+  padding: 24px 16px;
+}
+
+h1 {
+  margin-top: 0;
+}
+
+.choices {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.choices button {
+  font-size: 48px;
+  width: 110px;
+  padding: 12px 0;
+  border: 3px solid #ffe45c;
+  border-radius: 16px;
+  background: #212e4c;
+  color: white;
+  cursor: pointer;
+}
+
+.choices button:hover {
+  background: #2d3b5e;
+}
+
+.choices span {
+  display: block;
+  font-size: 16px;
+  margin-top: 4px;
+}
+
+#round {
+  font-size: 20px;
+  min-height: 28px;
+}
+
+#result {
+  font-size: 32px;
+  font-weight: bold;
+  min-height: 42px;
+}
+
+#score {
+  font-size: 22px;
+  color: #ffe45c;
+}
+</textarea>
+    <textarea data-lang="js">
+const roundDisplay = document.querySelector("#round");
+const resultDisplay = document.querySelector("#result");
+const scoreDisplay = document.querySelector("#score");
+
+const choices = ["rock", "paper", "scissors"];
+const labels = {
+  rock: "Stein ✊",
+  paper: "Papier ✋",
+  scissors: "Schere ✌️",
+};
+
+const score = { player: 0, computer: 0 };
+
+// Schritt 1: Füg hier deine Funktionen randomChoice und getWinner ein
+
+
+function playRound(playerChoice) {
+  // Schritt 2: Lass den Computer wählen
+
+  // Schritt 3: Zeig in roundDisplay beide Wahlen an, z. B.
+  // "Du: Stein ✊ – Computer: Schere ✌️"
+
+  // Schritt 4: Ermittle den Sieger mit getWinner,
+  // erhöhe score.player oder score.computer
+  // und schreib "Gewonnen! 🎉", "Verloren 😢" oder "Unentschieden" in resultDisplay
+
+  // Schritt 5: Zeig den Punktestand in scoreDisplay an
+
+}
+
+// Schritt 6: Gib allen Buttons mit data-choice einen Klick-Code,
+// der playRound(button.dataset.choice) aufruft
+
+</textarea>
+  </html-playground>
+
+  <details class="solution"><summary>Komplette Lösung (JS) anzeigen</summary>
+    <pre><code>const roundDisplay = document.querySelector("#round");
+const resultDisplay = document.querySelector("#result");
+const scoreDisplay = document.querySelector("#score");
+
+const choices = ["rock", "paper", "scissors"];
+const labels = {
+  rock: "Stein ✊",
+  paper: "Papier ✋",
+  scissors: "Schere ✌️",
+};
+
+const score = { player: 0, computer: 0 };
+
+function randomChoice() {
+  return choices[Math.floor(Math.random() * choices.length)];
+}
+
+function getWinner(player, computer) {
+  if (player === computer) {
+    return "draw";
+  }
+  if (
+    (player === "rock" &amp;&amp; computer === "scissors") ||
+    (player === "paper" &amp;&amp; computer === "rock") ||
+    (player === "scissors" &amp;&amp; computer === "paper")
+  ) {
+    return "player";
+  }
+  return "computer";
+}
+
+function playRound(playerChoice) {
+  const computerChoice = randomChoice();
+  roundDisplay.textContent = `Du: ${labels[playerChoice]} – Computer: ${labels[computerChoice]}`;
+
+  const winner = getWinner(playerChoice, computerChoice);
+  if (winner === "player") {
+    score.player++;
+    resultDisplay.textContent = "Gewonnen! 🎉";
+  } else if (winner === "computer") {
+    score.computer++;
+    resultDisplay.textContent = "Verloren 😢";
+  } else {
+    resultDisplay.textContent = "Unentschieden";
+  }
+
+  scoreDisplay.textContent = `Du ${score.player} : ${score.computer} Computer`;
+}
+
+for (const button of document.querySelectorAll("[data-choice]")) {
+  button.addEventListener("click", () =&gt; {
+    playRound(button.dataset.choice);
+  });
+}</code></pre>
+  </details>
+
+  <h2>Mach es zu deinem Spiel</h2>
+  <ul>
+    <li>Wer zuerst 3 Punkte hat, gewinnt das ganze Match. Danach gibt es einen Button „Neues Match“.</li>
+    <li>Färbe <code>resultDisplay</code> grün, rot oder grau, je nach Ergebnis.</li>
+    <li>Zähle mit, wie oft du schon welche Wahl getroffen hast. Ein Objekt wie <code>{ rock: 0, paper: 0, scissors: 0 }</code> hilft.</li>
+    <li>Schwer: Erweitere das Spiel um Echse und Spock (aus „The Big Bang Theory“). Wie musst du <code>getWinner</code> ändern? Gibt es einen Weg, die Regeln in einem Objekt zu speichern statt in vielen <code>||</code>?</li>
+  </ul>
+</main>
+<script src="assets/course.js"></script>
+<script>
+  const CHOICES = ['rock', 'paper', 'scissors'];
+  const BEATS = { rock: 'scissors', paper: 'rock', scissors: 'paper' };
+  const LABELS = { rock: 'Stein', paper: 'Papier', scissors: 'Schere' };
+
+  Course.check('lesson-12-random', ({ value }) => {
+    const randomChoice = value('randomChoice');
+    if (typeof randomChoice !== 'function') return 'Ich finde keine Funktion namens randomChoice.';
+    const seen = new Set();
+    for (let i = 0; i < 1000; i++) {
+      const choice = randomChoice();
+      if (choice === undefined) return 'randomChoice gibt nichts zurück. Hast du return vergessen?';
+      if (!CHOICES.includes(choice)) return `randomChoice hat ${JSON.stringify(choice)} gewählt. Erlaubt sind nur "rock", "paper" und "scissors".`;
+      seen.add(choice);
+    }
+    if (seen.size < 3) return `In 1000 Runden kam nur ${[...seen].join(' und ')} vor. Alle drei sollten möglich sein.`;
+    return true;
+  });
+
+  Course.check('lesson-12-winner', ({ value }) => {
+    const getWinner = value('getWinner');
+    if (typeof getWinner !== 'function') return 'Ich finde keine Funktion namens getWinner.';
+    for (const player of CHOICES) {
+      for (const computer of CHOICES) {
+        const expected = player === computer ? 'draw' : BEATS[player] === computer ? 'player' : 'computer';
+        const actual = getWinner(player, computer);
+        if (actual === undefined) return `getWinner("${player}", "${computer}") gibt nichts zurück. Hast du return vergessen?`;
+        if (actual !== expected) {
+          return `${LABELS[player]} gegen ${LABELS[computer]}: getWinner("${player}", "${computer}") ergibt ${JSON.stringify(actual)}, richtig wäre "${expected}".`;
+        }
+      }
+    }
+    return true;
+  });
+</script>
+</body>
+</html>
