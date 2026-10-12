@@ -23,8 +23,12 @@
   ];
 
   const MAX_LOOP_ITERATIONS = 5000000;
+  const MAX_RUN_MS = 2000;
+  const MAX_OUTPUT_LINES = 1000;
+  const MAX_VISIBLE_LINES = 2000;
   const STORAGE_PREFIX = 'codeheft:';
   const INFINITE_LOOP = 'INFINITE_LOOP';
+  const OUTPUT_LIMIT = 'OUTPUT_LIMIT';
 
   /* ---------- Storage (may be unavailable, e.g. private mode) ---------- */
   const storage = {
@@ -101,8 +105,14 @@
     message = String(message || '');
     let m;
     if (message === INFINITE_LOOP) {
-      return 'Deine Schleife ist über ' + MAX_LOOP_ITERATIONS.toLocaleString('de-DE') +
-        ' Mal gelaufen – wahrscheinlich hört sie nie auf. Prüfe die Bedingung: Wird sie irgendwann false?';
+      return 'Deine Schleife lief über ' + MAX_LOOP_ITERATIONS.toLocaleString('de-DE') +
+        ' Mal oder länger als ' + MAX_RUN_MS / 1000 + ' Sekunden – wahrscheinlich hört sie nie auf. ' +
+        'Prüfe die Bedingung: Wird sie irgendwann false?';
+    }
+    if (message === OUTPUT_LIMIT) {
+      return 'Dein Programm wollte mehr als ' + MAX_OUTPUT_LINES.toLocaleString('de-DE') +
+        ' Zeilen ausgeben. Ich habe abgebrochen, damit der Browser nicht hängen bleibt. ' +
+        'Steckt console.log in einer Schleife, die nie aufhört?';
     }
     if ((m = message.match(/^'?(.+?)'? is not defined$/)) || (m = message.match(/^Can't find variable: (.+)$/))) {
       return `JavaScript kennt „${m[1]}“ nicht. Tippfehler? Groß-/Kleinschreibung beachtet? ` +
@@ -156,24 +166,49 @@
     return null;
   }
 
-  /* ---------- Loop guard: inserts a counter into every braced loop so the tab never freezes ---------- */
+  /* ---------- Run guard: keeps runaway learner code from freezing the tab ----------
+   * Every loop condition is wrapped as `__loopGuard() && (condition)`. Unlike inserting a call
+   * into the loop body, this also covers loops without braces such as `while (x) i++;` or `for (;;);`.
+   * Console output is limited separately, because a loop that logs on every pass floods the page
+   * with DOM nodes (or postMessage calls) long before the iteration limit is reached. */
+  const skipString = (code, i) => {
+    const quote = code[i];
+    i++;
+    while (i < code.length && code[i] !== quote) { if (code[i] === '\\') i++; i++; }
+    return i;
+  };
+
   function findClosingParen(code, start) {
     let depth = 0;
     for (let i = start; i < code.length; i++) {
       const c = code[i];
-      if (c === '"' || c === "'" || c === '`') {
-        i++;
-        while (i < code.length && code[i] !== c) { if (code[i] === '\\') i++; i++; }
-        continue;
-      }
+      if (c === '"' || c === "'" || c === '`') { i = skipString(code, i); continue; }
       if (c === '(') depth++;
       else if (c === ')' && --depth === 0) return i;
     }
     return -1;
   }
 
+  // Splits a for-header like "let i = 0; i < 3; i++" at semicolons that are not nested in brackets or strings.
+  function splitForHeader(header) {
+    const parts = [];
+    let depth = 0;
+    let start = 0;
+    for (let i = 0; i < header.length; i++) {
+      const c = header[i];
+      if (c === '"' || c === "'" || c === '`') { i = skipString(header, i); continue; }
+      if ('([{'.includes(c)) depth++;
+      else if (')]}'.includes(c)) depth--;
+      else if (c === ';' && depth === 0) { parts.push(header.slice(start, i)); start = i + 1; }
+    }
+    parts.push(header.slice(start));
+    return parts;
+  }
+
+  // Keeps the condition's whitespace (including line breaks) so error line numbers stay correct.
+  const guardCondition = (condition) => `__loopGuard() && (${condition.trim() ? guardLoops(condition) : 'true'})`;
+
   function guardLoops(code) {
-    const GUARD_CALL = '__loopGuard();';
     const n = code.length;
     let out = '';
     let i = 0;
@@ -192,27 +227,35 @@
         out += code.slice(i, end); i = end; continue;
       }
       if (c === '"' || c === "'" || c === '`') {
-        let j = i + 1;
-        while (j < n && code[j] !== c) { if (code[j] === '\\') j++; j++; }
-        out += code.slice(i, j + 1); i = j + 1; continue;
+        const end = skipString(code, i);
+        out += code.slice(i, end + 1); i = end + 1; continue;
       }
       if (/[A-Za-z_$]/.test(c)) {
         let j = i;
         while (j < n && /[\w$]/.test(code[j])) j++;
         const word = code.slice(i, j);
         const isKeywordPosition = !/[\w$.]/.test(code[i - 1] || '');
-        if (isKeywordPosition && (word === 'for' || word === 'while')) {
-          const open = skipSpace(j);
-          if (code[open] === '(') {
-            const close = findClosingParen(code, open);
-            if (close > 0) {
-              const brace = skipSpace(close + 1);
-              if (code[brace] === '{') { out += code.slice(i, brace + 1) + GUARD_CALL; i = brace + 1; continue; }
-            }
+        const open = skipSpace(j);
+        const close = isKeywordPosition && (word === 'for' || word === 'while') && code[open] === '('
+          ? findClosingParen(code, open) : -1;
+        if (close > 0) {
+          const header = code.slice(open + 1, close);
+          // Line breaks inside the header are kept, so error line numbers stay correct.
+          if (word === 'while') {
+            out += `while (${guardCondition(header)})`;
+            i = close + 1; continue;
           }
-        } else if (isKeywordPosition && word === 'do') {
-          const brace = skipSpace(j);
-          if (code[brace] === '{') { out += code.slice(i, brace + 1) + GUARD_CALL; i = brace + 1; continue; }
+          const parts = splitForHeader(header);
+          if (parts.length === 3) {
+            out += `for (${guardLoops(parts[0])};${guardCondition(parts[1])};${guardLoops(parts[2])})`;
+            i = close + 1; continue;
+          }
+          // for…of / for…in: no condition to wrap, so guard the body if it has braces.
+          const brace = skipSpace(close + 1);
+          if (code[brace] === '{') {
+            out += code.slice(i, brace + 1) + '__loopGuard();';
+            i = brace + 1; continue;
+          }
         }
         out += word; i = j; continue;
       }
@@ -222,10 +265,12 @@
   }
 
   // Kept as source text so it can also run inside the playground iframe.
-  // The counter resets on the next macrotask, so the limit applies per synchronous run.
-  const LOOP_GUARD_SOURCE = `(function(){var count=0,scheduled=false;window.__loopGuard=function(){` +
-    `if(!scheduled){scheduled=true;setTimeout(function(){count=0;scheduled=false;},0);}` +
-    `if(++count>${MAX_LOOP_ITERATIONS})throw new Error('${INFINITE_LOOP}');};})();`;
+  // Counters reset on the next macrotask, so the limits apply per synchronous run.
+  const RUN_GUARD_SOURCE = `(function(){var loops=0,outputs=0,start=0,scheduled=false;` +
+    `function begin(){if(!scheduled){scheduled=true;start=Date.now();setTimeout(function(){loops=0;outputs=0;scheduled=false;},0);}}` +
+    `window.__loopGuard=function(){begin();` +
+    `if(++loops>${MAX_LOOP_ITERATIONS}||(loops%1024===0&&Date.now()-start>${MAX_RUN_MS}))throw new Error('${INFINITE_LOOP}');return true;};` +
+    `window.__outputGuard=function(){begin();if(++outputs>${MAX_OUTPUT_LINES})throw new Error('${OUTPUT_LIMIT}');};})();`;
 
   // Turns anything thrown into { name, message } and strips DOM wrapper text learners would not understand.
   function normalizeError(thrown) {
@@ -257,9 +302,11 @@
       this.running = false;
 
       const win = this.win;
-      win.eval(LOOP_GUARD_SOURCE);
-      const forward = (kind) => (...args) =>
+      win.eval(RUN_GUARD_SOURCE);
+      const forward = (kind) => (...args) => {
+        win.__outputGuard();
         this.onOutput(kind, args.map((arg) => formatValue(arg, 0, [], true)).join(' '));
+      };
       win.console = {
         log: forward('log'), info: forward('log'), debug: forward('log'), table: forward('log'),
         warn: forward('warn'), error: forward('error'),
@@ -339,8 +386,12 @@
   function renderError(error, showLine) {
     const name = error.name || 'Error';
     const message = error.message === undefined ? String(error) : error.message;
-    const title = message === INFINITE_LOOP ? 'Abgebrochen: Endlosschleife' : `${name}: ${message}`;
-    const lineLabel = error.lineLabel || (error.line ? `Zeile ${error.line}` : '');
+    const title = message === INFINITE_LOOP ? 'Abgebrochen: Endlosschleife'
+      : message === OUTPUT_LIMIT ? 'Abgebrochen: zu viele Ausgaben'
+      : `${name}: ${message}`;
+    // Guard aborts are thrown from the guard's own code, so their line number would point there.
+    const isGuardAbort = message === INFINITE_LOOP || message === OUTPUT_LIMIT;
+    const lineLabel = isGuardAbort ? '' : error.lineLabel || (error.line ? `Zeile ${error.line}` : '');
     const line = showLine && lineLabel ? `  (${lineLabel})` : '';
     const row = h('div', { class: 'line error' }, h('span', { class: 'error-title', text: title + line }));
     const explanation = explainError(name, message);
@@ -353,7 +404,19 @@
     if (kind === 'error-object') container.append(renderError(content, showLine));
     else if (kind === 'input') container.append(highlightInto(h('div', { class: 'line input' }), content, 'javascript'));
     else container.append(h('div', { class: `line ${kind}`, text: content }));
-    container.scrollTop = container.scrollHeight;
+    while (container.childElementCount > MAX_VISIBLE_LINES) container.firstElementChild.remove();
+    scrollToEnd(container);
+  }
+
+  // Scrolling forces a layout, so do it at most once per frame instead of once per line.
+  const pendingScrolls = new WeakSet();
+  function scrollToEnd(container) {
+    if (pendingScrolls.has(container)) return;
+    pendingScrolls.add(container);
+    requestAnimationFrame(() => {
+      pendingScrolls.delete(container);
+      container.scrollTop = container.scrollHeight;
+    });
   }
 
   /* ---------- Code editing: CodeMirror when available, plain textarea as fallback ---------- */
@@ -705,7 +768,7 @@
       try {
         verdict = check(api);
       } catch (error) {
-        verdict = error && error.message === INFINITE_LOOP
+        verdict = error && (error.message === INFINITE_LOOP || error.message === OUTPUT_LIMIT)
           ? 'Beim Testen ist eine Endlosschleife passiert.'
           : 'Beim Testen ist ein Fehler aufgetreten: ' + (error && error.message ? error.message : error);
       }
@@ -738,9 +801,9 @@
   ];
 
   // Injected into the preview: guards loops and forwards console output and errors to the parent page.
-  const previewBridge = (channel) => `<script>${LOOP_GUARD_SOURCE}(function(){var formatValue=${formatValue.toString()};` +
+  const previewBridge = (channel) => `<script>${RUN_GUARD_SOURCE}(function(){var formatValue=${formatValue.toString()};` +
     `function send(kind,content){parent.postMessage({channel:${JSON.stringify(channel)},kind:kind,content:content},'*');}` +
-    `function forward(kind){return function(){var parts=[];for(var i=0;i<arguments.length;i++)parts.push(formatValue(arguments[i],0,[],true));send(kind,parts.join(' '));};}` +
+    `function forward(kind){return function(){window.__outputGuard();var parts=[];for(var i=0;i<arguments.length;i++)parts.push(formatValue(arguments[i],0,[],true));send(kind,parts.join(' '));};}` +
     `console.log=forward('log');console.info=forward('log');console.warn=forward('warn');console.error=forward('error');` +
     `window.addEventListener('error',function(e){var x=e.error;send('error-object',{name:x&&x.name||'Error',message:x&&x.message!==undefined?x.message:e.message,line:e.lineno});});` +
     `})();<\/script>`;
@@ -884,7 +947,7 @@
       const { html, css, js } = this.values();
       const guarded = mode !== 'file';
       const injected = mode === 'preview' ? previewBridge(this.channel)
-        : mode === 'tab' ? `<script>${LOOP_GUARD_SOURCE}<\/script>` : '';
+        : mode === 'tab' ? `<script>${RUN_GUARD_SOURCE}<\/script>` : '';
       const head = [
         '<meta charset="utf-8">',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
